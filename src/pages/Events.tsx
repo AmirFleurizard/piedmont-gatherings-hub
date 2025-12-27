@@ -1,10 +1,29 @@
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import EventCard from "@/components/EventCard";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Calendar, MapPin } from "lucide-react";
+import { format } from "date-fns";
 import worshipImage from "@/assets/worship.jpg";
-import communityImage from "@/assets/community.jpg";
 
 const Events = () => {
+  const { data: events, isLoading } = useQuery({
+    queryKey: ["public-events"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("*, churches(name)")
+        .eq("is_published", true)
+        .gte("event_date", new Date().toISOString())
+        .order("event_date", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -21,71 +40,61 @@ const Events = () => {
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                <EventCard
-                  title="Spring Faith Convention"
-                  date="March 15-17, 2025"
-                  location="Grace Community Center"
-                  description="Join us for three days of worship, fellowship, and spiritual renewal as we gather together in faith and celebration."
-                  imageUrl={worshipImage}
-                />
-                <EventCard
-                  title="Youth Leadership Summit"
-                  date="April 22, 2025"
-                  location="Hope Church"
-                  description="Empowering young adults to lead with faith and purpose in their communities and churches through workshops and mentorship."
-                  imageUrl={communityImage}
-                />
-                <EventCard
-                  title="Community Outreach Day"
-                  date="May 10, 2025"
-                  location="Various Locations"
-                  description="Serving our community together through acts of kindness, compassion, and Christian love. Multiple service projects available."
-                  imageUrl={communityImage}
-                />
-                <EventCard
-                  title="Summer Bible Conference"
-                  date="June 20-23, 2025"
-                  location="Cornerstone Church"
-                  description="Deep dive into scripture with renowned Bible teachers and engaging workshops for spiritual growth and understanding."
-                  imageUrl={worshipImage}
-                />
-                <EventCard
-                  title="Women's Empowerment Retreat"
-                  date="July 14-16, 2025"
-                  location="Mountain View Retreat Center"
-                  description="A weekend dedicated to spiritual renewal, encouragement, and building meaningful connections among women of faith."
-                  imageUrl={communityImage}
-                />
-                <EventCard
-                  title="Men's Leadership Conference"
-                  date="August 5-6, 2025"
-                  location="Victory Temple"
-                  description="Equipping men to lead with integrity, purpose, and faith in their families, churches, and communities."
-                  imageUrl={worshipImage}
-                />
-                <EventCard
-                  title="Fall Revival Services"
-                  date="September 15-17, 2025"
-                  location="New Life Church"
-                  description="Three nights of powerful worship and inspiring preaching to renew your spirit and strengthen your faith."
-                  imageUrl={worshipImage}
-                />
-                <EventCard
-                  title="Ministry Training Workshop"
-                  date="October 12, 2025"
-                  location="Faith Baptist Church"
-                  description="Practical training for ministry leaders covering outreach strategies, discipleship, and effective church leadership."
-                  imageUrl={communityImage}
-                />
-                <EventCard
-                  title="Annual Thanksgiving Service"
-                  date="November 24, 2025"
-                  location="Hope Fellowship"
-                  description="Join our district-wide celebration of gratitude with special music, testimonies, and a powerful message of thanksgiving."
-                  imageUrl={worshipImage}
-                />
-              </div>
+              {isLoading ? (
+                <div className="flex justify-center py-12">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
+              ) : events?.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground text-lg">No upcoming events at this time.</p>
+                  <p className="text-muted-foreground">Check back soon for new events!</p>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                  {events?.map((event) => (
+                    <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                      <div className="h-48 overflow-hidden">
+                        <img 
+                          src={event.image_url || worshipImage} 
+                          alt={event.title} 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                      <CardHeader>
+                        <CardTitle className="text-xl">{event.title}</CardTitle>
+                        <CardDescription className="flex flex-col gap-1 mt-2">
+                          <span className="flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            {format(new Date(event.event_date), "MMMM d, yyyy")}
+                          </span>
+                          <span className="flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            {event.location}
+                          </span>
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-muted-foreground line-clamp-2">
+                          {event.description || "Join us for this upcoming event!"}
+                        </p>
+                        <div className="flex items-center gap-4 mt-3 text-sm">
+                          <span className="text-secondary font-medium">
+                            {event.is_free ? "Free" : `$${event.price}`}
+                          </span>
+                          <span className="text-muted-foreground">
+                            {event.spots_remaining} spots left
+                          </span>
+                        </div>
+                      </CardContent>
+                      <CardFooter>
+                        <Button variant="secondary" className="w-full" asChild>
+                          <Link to={`/events/${event.id}`}>Register Now</Link>
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+              )}
 
               <div className="bg-secondary/10 border-2 border-secondary p-8 rounded-lg">
                 <h2 className="text-3xl font-bold mb-4 text-primary text-center">
@@ -93,20 +102,9 @@ const Events = () => {
                 </h2>
                 <p className="text-muted-foreground mb-6 text-center max-w-3xl mx-auto leading-relaxed">
                   Most events require advance registration to help us prepare adequate seating, materials, 
-                  and refreshments. Registration typically opens 6-8 weeks before each event. Some events 
-                  may have limited capacity and will be filled on a first-come, first-served basis.
+                  and refreshments.
                 </p>
-                <div className="bg-background p-6 rounded-lg">
-                  <h3 className="text-xl font-semibold mb-4 text-primary">Registration Requirements</h3>
-                  <ul className="space-y-2 text-muted-foreground">
-                    <li>• All participants must be 18 years of age or older</li>
-                    <li>• Online registration closes 48 hours before event start</li>
-                    <li>• Confirmation email will be sent within 24 hours of registration</li>
-                    <li>• Some events may require a registration fee to cover materials and meals</li>
-                    <li>• Cancellation policy varies by event - check individual event details</li>
-                  </ul>
-                </div>
-                <div className="text-center mt-8">
+                <div className="text-center">
                   <p className="text-foreground mb-4">
                     Questions about registration? Contact our events team:
                   </p>
