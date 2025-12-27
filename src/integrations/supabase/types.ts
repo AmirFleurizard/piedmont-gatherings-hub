@@ -14,16 +14,257 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      churches: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          location: string | null
+          name: string
+          pastor: string | null
+          phone: string | null
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          location?: string | null
+          name: string
+          pastor?: string | null
+          phone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          location?: string | null
+          name?: string
+          pastor?: string | null
+          phone?: string | null
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          capacity: number
+          church_id: string
+          created_at: string
+          description: string | null
+          end_date: string | null
+          event_date: string
+          id: string
+          image_url: string | null
+          is_free: boolean
+          is_published: boolean
+          location: string
+          price: number | null
+          spots_remaining: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number
+          church_id: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_date: string
+          id?: string
+          image_url?: string | null
+          is_free?: boolean
+          is_published?: boolean
+          location: string
+          price?: number | null
+          spots_remaining?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number
+          church_id?: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          event_date?: string
+          id?: string
+          image_url?: string | null
+          is_free?: boolean
+          is_published?: boolean
+          location?: string
+          price?: number | null
+          spots_remaining?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_church_id_fkey"
+            columns: ["church_id"]
+            isOneToOne: false
+            referencedRelation: "churches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      registrations: {
+        Row: {
+          attendee_email: string
+          attendee_name: string
+          attendee_phone: string | null
+          checked_in: boolean
+          checked_in_at: string | null
+          confirmation_sent: boolean
+          created_at: string
+          event_id: string
+          hold_expires_at: string | null
+          id: string
+          num_tickets: number
+          payment_status: string
+          registration_status: string
+          stripe_payment_intent_id: string | null
+          stripe_session_id: string | null
+          total_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          attendee_email: string
+          attendee_name: string
+          attendee_phone?: string | null
+          checked_in?: boolean
+          checked_in_at?: string | null
+          confirmation_sent?: boolean
+          created_at?: string
+          event_id: string
+          hold_expires_at?: string | null
+          id?: string
+          num_tickets?: number
+          payment_status?: string
+          registration_status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          attendee_email?: string
+          attendee_name?: string
+          attendee_phone?: string | null
+          checked_in?: boolean
+          checked_in_at?: string | null
+          confirmation_sent?: boolean
+          created_at?: string
+          event_id?: string
+          hold_expires_at?: string | null
+          id?: string
+          num_tickets?: number
+          payment_status?: string
+          registration_status?: string
+          stripe_payment_intent_id?: string | null
+          stripe_session_id?: string | null
+          total_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          church_id: string | null
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          church_id?: string | null
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          church_id?: string | null
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_roles_church_id_fkey"
+            columns: ["church_id"]
+            isOneToOne: false
+            referencedRelation: "churches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      can_manage_church: {
+        Args: { _church_id: string; _user_id: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_county_admin: { Args: { _user_id: string }; Returns: boolean }
+      release_event_spots: {
+        Args: { _event_id: string; _num_tickets: number }
+        Returns: undefined
+      }
+      release_expired_holds: { Args: never; Returns: number }
+      reserve_event_spots: {
+        Args: { _event_id: string; _num_tickets: number }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "county_admin" | "church_admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +391,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["county_admin", "church_admin"],
+    },
   },
 } as const
