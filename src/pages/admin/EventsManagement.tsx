@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Edit, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -23,6 +23,52 @@ const EventsManagement = () => {
   const queryClient = useQueryClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState<Event | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        toast({
+          title: "File too large",
+          description: "Please select an image under 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    const fileExt = file.name.split(".").pop();
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
+    const filePath = `events/${fileName}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("event-images")
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data } = supabase.storage
+      .from("event-images")
+      .getPublicUrl(filePath);
+
+    return data.publicUrl;
+  };
 
   const { data: churches } = useQuery({
     queryKey: ["churches"],
@@ -53,6 +99,14 @@ const EventsManagement = () => {
 
   const saveMutation = useMutation({
     mutationFn: async (formData: FormData) => {
+      setIsUploading(true);
+      
+      let imageUrl = editingEvent?.image_url || null;
+      
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
       const eventData = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
@@ -67,7 +121,7 @@ const EventsManagement = () => {
         price: formData.get("is_free") === "true" ? 0 : parseFloat(formData.get("price") as string) || 0,
         is_published: formData.get("is_published") === "true",
         church_id: formData.get("church_id") as string,
-        image_url: formData.get("image_url") as string || null,
+        image_url: imageUrl,
       };
 
       if (editingEvent) {
@@ -89,8 +143,12 @@ const EventsManagement = () => {
       });
       setIsDialogOpen(false);
       setEditingEvent(null);
+      setImageFile(null);
+      setImagePreview(null);
+      setIsUploading(false);
     },
     onError: (error: Error) => {
+      setIsUploading(false);
       toast({
         title: "Error",
         description: error.message,
@@ -141,11 +199,15 @@ const EventsManagement = () => {
 
   const openEditDialog = (event: Event) => {
     setEditingEvent(event);
+    setImagePreview(event.image_url || null);
+    setImageFile(null);
     setIsDialogOpen(true);
   };
 
   const openCreateDialog = () => {
     setEditingEvent(null);
+    setImageFile(null);
+    setImagePreview(null);
     setIsDialogOpen(true);
   };
 
@@ -255,27 +317,66 @@ const EventsManagement = () => {
                 </div>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="capacity">Capacity</Label>
-                  <Input
-                    id="capacity"
-                    name="capacity"
-                    type="number"
-                    min={1}
-                    defaultValue={editingEvent?.capacity || 100}
-                    required
+              <div className="space-y-2">
+                <Label htmlFor="capacity">Capacity</Label>
+                <Input
+                  id="capacity"
+                  name="capacity"
+                  type="number"
+                  min={1}
+                  defaultValue={editingEvent?.capacity || 100}
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Event Image (optional)</Label>
+                <div className="flex flex-col gap-3">
+                  {imagePreview ? (
+                    <div className="relative w-full max-w-xs">
+                      <img 
+                        src={imagePreview} 
+                        alt="Event preview" 
+                        className="w-full h-32 object-cover rounded-md border"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2 h-6 w-6"
+                        onClick={clearImage}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <div 
+                      className="w-full max-w-xs h-32 border-2 border-dashed border-muted-foreground/25 rounded-md flex flex-col items-center justify-center cursor-pointer hover:border-muted-foreground/50 transition-colors"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                      <span className="text-sm text-muted-foreground">Click to upload</span>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="image_url">Image URL (optional)</Label>
-                  <Input
-                    id="image_url"
-                    name="image_url"
-                    type="url"
-                    defaultValue={editingEvent?.image_url || ""}
-                    placeholder="https://example.com/image.jpg"
-                  />
+                  {!imagePreview && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="w-fit"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Choose Image
+                    </Button>
+                  )}
                 </div>
               </div>
 
@@ -328,8 +429,8 @@ const EventsManagement = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={saveMutation.isPending}>
-                  {saveMutation.isPending ? "Saving..." : "Save Event"}
+                <Button type="submit" disabled={saveMutation.isPending || isUploading}>
+                  {isUploading ? "Uploading..." : saveMutation.isPending ? "Saving..." : "Save Event"}
                 </Button>
               </div>
             </form>
