@@ -40,7 +40,7 @@ const Navigation = () => {
               </NavLink>
             ))}
             <a 
-              href="https://facebook.com" 
+              href="https://www.facebook.com/PDCDOC/"
               target="_blank" 
               rel="noopener noreferrer"
               className="text-accent hover:text-accent/80 transition-colors"
@@ -73,7 +73,7 @@ const Navigation = () => {
                     </NavLink>
                   ))}
                   <a 
-                    href="https://facebook.com" 
+                    href="https://www.facebook.com/PDCDOC/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-lg text-accent hover:text-accent/80 transition-colors"

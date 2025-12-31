@@ -30,7 +30,7 @@ const Footer = () => {
             <h3 className="font-semibold text-lg mb-4">Connect With Us</h3>
             <div className="flex gap-4">
               <a 
-                href="https://facebook.com" 
+                href="https://www.facebook.com/PDCDOC/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="bg-primary-foreground/10 hover:bg-primary-foreground/20 p-3 rounded-full transition-colors"
