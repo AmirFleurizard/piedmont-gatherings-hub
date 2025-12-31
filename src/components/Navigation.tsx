@@ -1,8 +1,22 @@
 import { NavLink } from "@/components/NavLink";
-import { Facebook } from "lucide-react";
+import { Facebook, Menu, X } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useState } from "react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const navLinks = [
+    { to: "/", label: "Home", end: true },
+    { to: "/about", label: "About" },
+    { to: "/staff", label: "Staff" },
+    { to: "/churches", label: "Churches" },
+    { to: "/events", label: "Events" },
+    { to: "/contact", label: "Contact" },
+  ];
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
       <div className="container mx-auto px-4">
@@ -12,50 +26,19 @@ const Navigation = () => {
             <span className="text-xl font-semibold text-primary">Piedmont Connect</span>
           </NavLink>
           
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <NavLink 
-              to="/" 
-              end
-              className="text-foreground hover:text-secondary transition-colors"
-              activeClassName="text-secondary font-semibold"
-            >
-              Home
-            </NavLink>
-            <NavLink 
-              to="/about" 
-              className="text-foreground hover:text-secondary transition-colors"
-              activeClassName="text-secondary font-semibold"
-            >
-              About
-            </NavLink>
-            <NavLink 
-              to="/staff" 
-              className="text-foreground hover:text-secondary transition-colors"
-              activeClassName="text-secondary font-semibold"
-            >
-              Staff
-            </NavLink>
-            <NavLink 
-              to="/churches" 
-              className="text-foreground hover:text-secondary transition-colors"
-              activeClassName="text-secondary font-semibold"
-            >
-              Churches
-            </NavLink>
-            <NavLink 
-              to="/events" 
-              className="text-foreground hover:text-secondary transition-colors"
-              activeClassName="text-secondary font-semibold"
-            >
-              Events
-            </NavLink>
-            <NavLink 
-              to="/contact" 
-              className="text-foreground hover:text-secondary transition-colors"
-              activeClassName="text-secondary font-semibold"
-            >
-              Contact
-            </NavLink>
+            {navLinks.map((link) => (
+              <NavLink 
+                key={link.to}
+                to={link.to} 
+                end={link.end}
+                className="text-foreground hover:text-secondary transition-colors"
+                activeClassName="text-secondary font-semibold"
+              >
+                {link.label}
+              </NavLink>
+            ))}
             <a 
               href="https://facebook.com" 
               target="_blank" 
@@ -65,6 +48,42 @@ const Navigation = () => {
             >
               <Facebook className="h-5 w-5" />
             </a>
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" aria-label="Open menu">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[280px] bg-background">
+                <div className="flex flex-col gap-6 mt-8">
+                  {navLinks.map((link) => (
+                    <NavLink 
+                      key={link.to}
+                      to={link.to} 
+                      end={link.end}
+                      className="text-lg text-foreground hover:text-secondary transition-colors"
+                      activeClassName="text-secondary font-semibold"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {link.label}
+                    </NavLink>
+                  ))}
+                  <a 
+                    href="https://facebook.com" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-lg text-accent hover:text-accent/80 transition-colors"
+                  >
+                    <Facebook className="h-5 w-5" />
+                    Facebook
+                  </a>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
