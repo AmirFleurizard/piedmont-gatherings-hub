@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate, Link, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import { 
   LayoutDashboard, 
   Church, 
@@ -18,13 +19,22 @@ const Dashboard = () => {
   const { user, role, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
       navigate("/login");
+    } else if (!loading && user && !role) {
+      // Authenticated but no admin role - redirect to home
+      toast({
+        title: "Access Denied",
+        description: "You don't have permission to access the admin dashboard.",
+        variant: "destructive"
+      });
+      navigate("/");
     }
-  }, [user, loading, navigate]);
+  }, [user, role, loading, navigate, toast]);
 
   if (loading) {
     return (
@@ -34,7 +44,7 @@ const Dashboard = () => {
     );
   }
 
-  if (!user) {
+  if (!user || !role) {
     return null;
   }
 
