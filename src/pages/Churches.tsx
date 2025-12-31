@@ -1,65 +1,179 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Phone, Globe } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MapPin, Phone, Globe, Mail } from "lucide-react";
 
 interface Church {
   name: string;
   pastor: string;
-  location: string;
-  phone: string;
+  address: string;
+  city: string;
+  phone?: string;
+  email?: string;
   website?: string;
-  description: string;
 }
 
 const churches: Church[] = [
   {
-    name: "Grace Community Church",
-    pastor: "Rev. Thomas Anderson",
-    location: "123 Faith Avenue, Charlotte, NC",
-    phone: "(704) 555-0123",
-    website: "gracecommunity.org",
-    description: "A vibrant congregation focused on worship, community service, and spiritual growth for all ages."
+    name: "Antioch Christian Church",
+    pastor: "Rev. Barry Hylton",
+    address: "555 Spencer-Preston Road",
+    city: "Martinsville, Virginia 24112",
+    phone: "(276) 957-2327",
   },
   {
-    name: "Hope Fellowship",
-    pastor: "Pastor Jennifer Williams",
-    location: "456 Hope Street, Greensboro, NC",
-    phone: "(336) 555-0456",
-    website: "hopefellowship.org",
-    description: "Building a community of faith through authentic relationships and biblical teaching."
+    name: "Body of Christ Christian Church",
+    pastor: "Rev. Dr. Michael Cotton",
+    address: "425 Nathan Hunt Dr.",
+    city: "High Point, NC 27260",
   },
   {
-    name: "New Life Church",
-    pastor: "Rev. Michael Brown",
-    location: "789 Renewal Road, Raleigh, NC",
-    phone: "(919) 555-0789",
-    website: "newlifechurch.org",
-    description: "Empowering believers to live transformed lives through the power of the Gospel."
+    name: "Charity Christian Church",
+    pastor: "Minister Carl White (Interim)",
+    address: "915 Morgan Street",
+    city: "Martinsville, Virginia 24112",
+    phone: "(276) 632-0957",
   },
   {
-    name: "Faith Baptist Church",
-    pastor: "Dr. Patricia Davis",
-    location: "321 Worship Way, Durham, NC",
-    phone: "(919) 555-0321",
-    description: "A traditional Baptist church with a heart for missions and community outreach."
+    name: "Corinth Christian Church",
+    pastor: "VACANT",
+    address: "161 Reid Street, P.O. Box 1074",
+    city: "Chatham, Virginia 24531",
+    phone: "(434) 432-3645",
+    email: "cwhemming@comcast.net",
   },
   {
-    name: "Cornerstone Church",
-    pastor: "Pastor Robert Martinez",
-    location: "654 Foundation Drive, Winston-Salem, NC",
-    phone: "(336) 555-0654",
-    website: "cornerstonechurch.org",
-    description: "Building lives on the solid foundation of Christ through worship and discipleship."
+    name: "Fayette Street Christian Church",
+    pastor: "Rev. Calvin D. Curry",
+    address: "420 Fayette Street, PO Box 3107",
+    city: "Martinsville, Virginia 24112",
+    phone: "(276) 632-5906",
   },
   {
-    name: "Victory Temple",
-    pastor: "Bishop Angela Johnson",
-    location: "987 Victory Lane, Fayetteville, NC",
-    phone: "(910) 555-0987",
-    website: "victorytemple.org",
-    description: "A spirit-filled congregation celebrating God's goodness through praise and service."
-  }
+    name: "First Christian Church - Concord",
+    pastor: "Rev. Steven Mayhan",
+    address: "158 Rone Avenue, P.O. Box 1125",
+    city: "Concord, NC 28025",
+    phone: "(704) 786-6815",
+  },
+  {
+    name: "First Christian Church - Reidsville",
+    pastor: "Dr. Jacqueline MeHenry",
+    address: "206 Holderby Street, P.O. Box 1025",
+    city: "Reidsville, NC 27320",
+    phone: "(336) 349-3910",
+    email: "fcblessed1893@gmail.com",
+    website: "www.feccovenant.org",
+  },
+  {
+    name: "First Christian Church - Stuart",
+    pastor: "VACANT",
+    address: "113 Forest Lane, P.O. Box 1289",
+    city: "Stuart, Virginia 24171",
+    website: "disciples.org/congregation/listing/first-christian-church",
+  },
+  {
+    name: "Fresh Harvest Christian Church",
+    pastor: "Rev. Leroy Wimbush",
+    address: "7379 Woolwine Highway, P.O. Box 21",
+    city: "Woolwine, Virginia 24185",
+    phone: "(276) 930-4511",
+  },
+  {
+    name: "Iron Belt Christian Church",
+    pastor: "Rev. Dr. Kathy Thomas-Grant Itotia",
+    address: "336 Iron Belt Ln., P.O. Box 814",
+    city: "Stuart, Virginia 24171",
+    phone: "(276) 692-5350",
+    email: "PastorKJTG21@gmail.com",
+  },
+  {
+    name: "Jerusalem Christian Church",
+    pastor: "Rev. Robert Smith",
+    address: "35 Meadow Garden Lane",
+    city: "Martinsville, Virginia 24112",
+    phone: "(276) 638-6507",
+    email: "jechurch@centurylink.net",
+    website: "www.jerusalemdoc.org",
+  },
+  {
+    name: "Little Bethlehem Christian Church",
+    pastor: "Rev. DeJuan Harris",
+    address: "110 Piney Fork Church Road, P.O. Box 236",
+    city: "Eden, NC 27288",
+    phone: "(336) 623-3905",
+  },
+  {
+    name: "Little Salem Christian Church",
+    pastor: "Rev. Ronald McRae & Rev. Dr. Linda McRae (Co-Pastor)",
+    address: "P.O. Box 336",
+    city: "Reidsville, NC 27320",
+    phone: "(336) 342-0109",
+  },
+  {
+    name: "Loudon Avenue Christian Church",
+    pastor: "Rev. Bill Lee",
+    address: "730 Loudon Avenue NW",
+    city: "Roanoke, Virginia 24016",
+    phone: "(540) 342-8852",
+    website: "www.lacc-dc.org",
+  },
+  {
+    name: "Meadow Christian Church",
+    pastor: "Rev. Kenneth Hooker",
+    address: "1140 Meadowood Trail",
+    city: "Martinsville, Virginia 24112",
+    phone: "(276) 957-1940",
+    website: "www.meadowchristianchurchdoc.org",
+  },
+  {
+    name: "Middle Fork Christian Church",
+    pastor: "Rev. Anderson Hicks, II",
+    address: "2216 East First Street",
+    city: "Winston-Salem, NC 27101",
+    phone: "(336) 777-0418",
+    email: "middlefork@triad.rr.com",
+  },
+  {
+    name: "Mount Olive East Christian Church",
+    pastor: "Rev. Dr. Kenneth Davis",
+    address: "3611 Spencer-Preston Road",
+    city: "Martinsville, Virginia 24112",
+    phone: "(276) 957-3546",
+    email: "moechurch@.comcast.net",
+    website: "www.kimbanet.com/~moe/",
+  },
+  {
+    name: "Mount Pleasant Christian Church",
+    pastor: "Rev. Ronald Glover",
+    address: "1515 Britton Street",
+    city: "Greensboro, NC 27406",
+    phone: "(336) 275-7988",
+    email: "mpccd@triad.twebc.com",
+    website: "mtpleasantgreensboro.com",
+  },
+  {
+    name: "Mount Zion Christian Church",
+    pastor: "Rev. George Price, Sr.",
+    address: "115 Scales Road",
+    city: "Floyd, Virginia 24091",
+    phone: "(540) 745-5032",
+  },
+  {
+    name: "New Bethel Christian Church",
+    pastor: "Rev. Mable Finney",
+    address: "9 Brandermill Road",
+    city: "Fieldale, Virginia 24089",
+    phone: "(276) 673-6130",
+    email: "newbethelcc@yahoo.com",
+  },
+  {
+    name: "Shaw Christian Church",
+    pastor: "Rev. Merinda Easley",
+    address: "The Boulevard, P.O. Box 68208",
+    city: "Eden, NC 27288",
+    phone: "(336) 635-2277",
+  },
 ];
 
 const Churches = () => {
@@ -79,44 +193,56 @@ const Churches = () => {
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-6">
                 {churches.map((church, index) => (
                   <Card key={index} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
-                      <CardTitle className="text-2xl text-primary">{church.name}</CardTitle>
-                      <CardDescription className="text-base">
-                        Led by {church.pastor}
-                      </CardDescription>
+                      <CardTitle className="text-xl text-primary">{church.name}</CardTitle>
+                      <p className="text-muted-foreground">
+                        {church.pastor === "VACANT" ? "Pastor: Vacant" : `Pastor: ${church.pastor}`}
+                      </p>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-muted-foreground mb-6 leading-relaxed">
-                        {church.description}
-                      </p>
-                      
-                      <div className="space-y-3 text-sm">
+                      <div className="space-y-2 text-sm">
                         <div className="flex items-start gap-3">
-                          <MapPin className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                          <span className="text-foreground">{church.location}</span>
+                          <MapPin className="h-4 w-4 text-accent flex-shrink-0 mt-1" />
+                          <span className="text-foreground">
+                            {church.address}<br />{church.city}
+                          </span>
                         </div>
                         
-                        <div className="flex items-center gap-3">
-                          <Phone className="h-5 w-5 text-accent flex-shrink-0" />
-                          <a 
-                            href={`tel:${church.phone}`}
-                            className="text-foreground hover:text-accent transition-colors"
-                          >
-                            {church.phone}
-                          </a>
-                        </div>
+                        {church.phone && (
+                          <div className="flex items-center gap-3">
+                            <Phone className="h-4 w-4 text-accent flex-shrink-0" />
+                            <a 
+                              href={`tel:${church.phone}`}
+                              className="text-foreground hover:text-accent transition-colors"
+                            >
+                              {church.phone}
+                            </a>
+                          </div>
+                        )}
+                        
+                        {church.email && (
+                          <div className="flex items-center gap-3">
+                            <Mail className="h-4 w-4 text-accent flex-shrink-0" />
+                            <a 
+                              href={`mailto:${church.email}`}
+                              className="text-accent hover:text-accent/80 transition-colors break-all"
+                            >
+                              {church.email}
+                            </a>
+                          </div>
+                        )}
                         
                         {church.website && (
                           <div className="flex items-center gap-3">
-                            <Globe className="h-5 w-5 text-accent flex-shrink-0" />
+                            <Globe className="h-4 w-4 text-accent flex-shrink-0" />
                             <a 
-                              href={`https://${church.website}`}
+                              href={church.website.startsWith('http') ? church.website : `https://${church.website}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-accent hover:text-accent/80 transition-colors"
+                              className="text-accent hover:text-accent/80 transition-colors break-all"
                             >
                               {church.website}
                             </a>

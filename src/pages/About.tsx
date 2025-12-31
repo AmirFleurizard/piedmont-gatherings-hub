@@ -41,10 +41,10 @@ const About = () => {
 
                 <h2 className="text-3xl font-bold mb-6 mt-12 text-primary">Our Mission</h2>
                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                  We exist to unite believers in worship, strengthen faith through biblical teaching, and 
-                  empower churches to serve their communities effectively. Through our conventions, events, 
-                  and ongoing programs, we create opportunities for spiritual growth, leadership development, 
-                  and community impact.
+                  Our mission, as the Piedmont District Convention, being empowered by the Holy Spirit, is to 
+                  inform, educate, equip, and thoroughly furnish each church to serve all communities. To live 
+                  the good news, preach the good news, and share the good news from our doorsteps to the 
+                  uttermost parts of the world.
                 </p>
 
                 <div className="bg-muted/50 p-8 rounded-lg mt-12">
