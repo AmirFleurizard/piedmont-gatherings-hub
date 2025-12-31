@@ -1,52 +1,50 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Mail } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface StaffMember {
   name: string;
   role: string;
-  bio: string;
-  email: string;
 }
 
-const staffMembers: StaffMember[] = [
-  {
-    name: "Rev. Dr. James Mitchell",
-    role: "District Superintendent",
-    bio: "Rev. Dr. Mitchell brings over 30 years of ministry experience to the Piedmont District. His passion for unity and spiritual growth has strengthened our community of churches and inspired countless believers.",
-    email: "jmitchell@piedmontconnect.org"
-  },
-  {
-    name: "Pastor Sarah Johnson",
-    role: "Convention Coordinator",
-    bio: "Pastor Johnson oversees all convention planning and event coordination. Her attention to detail and heart for hospitality ensure that every gathering is meaningful and welcoming.",
-    email: "sjohnson@piedmontconnect.org"
-  },
-  {
-    name: "Minister David Chen",
-    role: "Youth & Young Adult Director",
-    bio: "Minister Chen leads our initiatives to engage and empower young adults in their faith journey. His innovative approach connects traditional faith with contemporary culture.",
-    email: "dchen@piedmontconnect.org"
-  },
-  {
-    name: "Rev. Maria Rodriguez",
-    role: "Community Outreach Director",
-    bio: "Rev. Rodriguez coordinates our district-wide community service initiatives. Her dedication to servant leadership has made a lasting impact on our local communities.",
-    email: "mrodriguez@piedmontconnect.org"
-  },
-  {
-    name: "Deacon Robert Washington",
-    role: "Worship Arts Director",
-    bio: "Deacon Washington leads worship coordination for our conventions and special events. His musical gifts and spiritual sensitivity create powerful worship experiences.",
-    email: "rwashington@piedmontconnect.org"
-  },
-  {
-    name: "Dr. Emily Anderson",
-    role: "Education & Training Director",
-    bio: "Dr. Anderson develops and oversees leadership training programs and educational workshops for church leaders across the district.",
-    email: "eanderson@piedmontconnect.org"
-  }
+interface Ministry {
+  name: string;
+  leader: string;
+}
+
+const officers: StaffMember[] = [
+  { name: "Rev. Kara Fleurizard", role: "Moderator" },
+  { name: "Rev. Kenneth Hooker", role: "Moderator Elect" },
+  { name: "VACANT", role: "Vice Moderator" },
+  { name: "Sister Melodie Ferguson", role: "Secretary" },
+  { name: "Jennifer Wimbush", role: "Assistant Secretary" },
+  { name: "Deacon Mildred Preston", role: "Treasurer" },
+  { name: "Sister Agnes Ziegler", role: "Financial Secretary" },
+];
+
+const trustees: StaffMember[] = [
+  { name: "Elder Louis Preston", role: "Trustee" },
+  { name: "Mauri Wimbush", role: "Trustee" },
+  { name: "Merinda Easley", role: "Trustee" },
+];
+
+const membersAtLarge: StaffMember[] = [
+  { name: "Deacon Doris Davis", role: "Member at Large" },
+  { name: "Rev. Kathy Thomas", role: "Member at Large" },
+  { name: "Sister Vanessa Milner", role: "Member at Large" },
+];
+
+const ministries: Ministry[] = [
+  { name: "Disciples Women Ministries", leader: "Rev. Deborah Clark" },
+  { name: "Christian Men Fellowship", leader: "Deacon Nathan Robinson" },
+  { name: "Christian Youth Fellowship (VA)", leader: "Sister Wendy Kellam" },
+  { name: "Christian Youth Fellowship (NC)", leader: "Sister Myra Stafford" },
+  { name: "Usher's Fellowship", leader: "Sister Tawiana Callaway-Burns" },
+  { name: "Minister's Fellowship", leader: "Rev. Dr. Jackie McHenry" },
+  { name: "Long Range Planning", leader: "Rev. Kenny Hooker" },
+  { name: "Goode-Finney", leader: "Rev. Leory Wimbush" },
+  { name: "Hubbard Walker", leader: "Sister Joann Washington" },
+  { name: "Spencer-Thomas", leader: "Elder Allen Watkins" },
 ];
 
 const Staff = () => {
@@ -61,37 +59,87 @@ const Staff = () => {
               <div className="text-center mb-16">
                 <h1 className="text-5xl font-bold mb-6 text-primary">Our Leadership Team</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Meet the dedicated leaders serving our district with passion, wisdom, and commitment 
-                  to advancing God's kingdom.
+                  Meet the dedicated leaders serving the Piedmont District Convention with passion, 
+                  wisdom, and commitment to advancing God's kingdom.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {staffMembers.map((member, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="w-24 h-24 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-3xl font-bold">
-                        {member.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <CardTitle className="text-center text-xl">{member.name}</CardTitle>
-                      <CardDescription className="text-center text-secondary font-semibold">
-                        {member.role}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
-                        {member.bio}
-                      </p>
-                      <a 
-                        href={`mailto:${member.email}`}
-                        className="flex items-center gap-2 text-accent hover:text-accent/80 transition-colors text-sm"
-                      >
-                        <Mail className="h-4 w-4" />
-                        <span>{member.email}</span>
-                      </a>
-                    </CardContent>
-                  </Card>
-                ))}
+              {/* Officers */}
+              <div className="mb-12">
+                <h2 className="text-3xl font-bold mb-8 text-primary text-center">District Officers</h2>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {officers.map((member, index) => (
+                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                      <CardHeader className="text-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                          {member.name === "VACANT" ? "?" : member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        </div>
+                        <CardTitle className="text-lg">{member.name}</CardTitle>
+                        <p className="text-secondary font-semibold">{member.role}</p>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trustees */}
+              <div className="mb-12">
+                <h2 className="text-3xl font-bold mb-8 text-primary text-center">Trustees</h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {trustees.map((member, index) => (
+                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                      <CardHeader className="text-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                          {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        </div>
+                        <CardTitle className="text-lg">{member.name}</CardTitle>
+                        <p className="text-secondary font-semibold">{member.role}</p>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Members at Large */}
+              <div className="mb-12">
+                <h2 className="text-3xl font-bold mb-8 text-primary text-center">Members at Large</h2>
+                <div className="grid md:grid-cols-3 gap-6">
+                  {membersAtLarge.map((member, index) => (
+                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                      <CardHeader className="text-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                          {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        </div>
+                        <CardTitle className="text-lg">{member.name}</CardTitle>
+                        <p className="text-secondary font-semibold">{member.role}</p>
+                      </CardHeader>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* Ministries */}
+              <div>
+                <h2 className="text-3xl font-bold mb-8 text-primary text-center">Ministry Leaders</h2>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {ministries.map((ministry, index) => (
+                    <Card key={index} className="hover:shadow-lg transition-shadow">
+                      <CardContent className="pt-6">
+                        <h3 className="font-bold text-lg text-foreground mb-2">{ministry.name}</h3>
+                        <p className="text-muted-foreground">{ministry.leader}</p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+
+              {/* District Office */}
+              <div className="mt-12 bg-muted/50 p-8 rounded-lg text-center">
+                <h2 className="text-2xl font-bold mb-4 text-primary">District Office</h2>
+                <p className="text-muted-foreground">
+                  3300 Wentworth St.<br />
+                  Reidsville, NC
+                </p>
               </div>
             </div>
           </div>
