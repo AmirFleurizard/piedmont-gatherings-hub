@@ -25,13 +25,13 @@ const Navigation = () => {
             <img src={logo} alt="Piedmont Connect Logo" className="h-10 w-10" />
             <span className="text-xl font-semibold text-primary">Piedmont Connect</span>
           </NavLink>
-
+          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <NavLink
+              <NavLink 
                 key={link.to}
-                to={link.to}
+                to={link.to} 
                 end={link.end}
                 className="text-foreground hover:text-secondary transition-colors"
                 activeClassName="text-secondary font-semibold"
@@ -39,9 +39,9 @@ const Navigation = () => {
                 {link.label}
               </NavLink>
             ))}
-            <a
-              href="https://www.facebook.com/PDCDOC/"
-              target="_blank"
+            <a 
+              href="https://facebook.com" 
+              target="_blank" 
               rel="noopener noreferrer"
               className="text-accent hover:text-accent/80 transition-colors"
               aria-label="Visit our Facebook page"
@@ -61,9 +61,9 @@ const Navigation = () => {
               <SheetContent side="right" className="w-[280px] bg-background">
                 <div className="flex flex-col gap-6 mt-8">
                   {navLinks.map((link) => (
-                    <NavLink
+                    <NavLink 
                       key={link.to}
-                      to={link.to}
+                      to={link.to} 
                       end={link.end}
                       className="text-lg text-foreground hover:text-secondary transition-colors"
                       activeClassName="text-secondary font-semibold"
@@ -72,9 +72,9 @@ const Navigation = () => {
                       {link.label}
                     </NavLink>
                   ))}
-                  <a
-                    href="https://www.facebook.com/PDCDOC/"
-                    target="_blank"
+                  <a 
+                    href="https://facebook.com" 
+                    target="_blank" 
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-lg text-accent hover:text-accent/80 transition-colors"
                   >
