@@ -14,7 +14,7 @@ const About = () => {
               <h1 className="text-5xl font-bold mb-8 text-primary text-center">About Us</h1>
 
               <div className="mb-12">
-                <img src={leadersImage} alt="Our community" className="w-full rounded-lg shadow-xl mb-8 aspect-video object-cover object-top" />
+                <img src={leadersImage} alt="Our community" className="w-full rounded-lg shadow-xl mb-8 aspect-video object-cover object-[center_30%]" />
               </div>
 
               <div className="prose prose-lg max-w-none">
