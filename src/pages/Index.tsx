@@ -144,6 +144,7 @@ const Index = () => {
                 events.map((event) => (
                   <EventCard
                     key={event.id}
+                    id={event.id}
                     title={event.title}
                     date={format(new Date(event.event_date), "MMMM d, yyyy")}
                     location={event.location}

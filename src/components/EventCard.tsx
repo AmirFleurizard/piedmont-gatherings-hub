@@ -1,8 +1,10 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface EventCardProps {
+  id: string;
   title: string;
   date: string;
   location: string;
@@ -10,7 +12,7 @@ interface EventCardProps {
   imageUrl?: string;
 }
 
-const EventCard = ({ title, date, location, description, imageUrl }: EventCardProps) => {
+const EventCard = ({ id, title, date, location, description, imageUrl }: EventCardProps) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       {imageUrl && (
@@ -35,7 +37,9 @@ const EventCard = ({ title, date, location, description, imageUrl }: EventCardPr
         <p className="text-muted-foreground">{description}</p>
       </CardContent>
       <CardFooter>
-        <Button variant="secondary" className="w-full">Register Now</Button>
+        <Button variant="secondary" className="w-full" asChild>
+          <Link to={`/events/${id}`}>Register Now</Link>
+        </Button>
       </CardFooter>
     </Card>
   );
