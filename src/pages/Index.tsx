@@ -6,8 +6,27 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
 import communityImage from "@/assets/community.jpg";
 import worshipImage from "@/assets/worship.jpg";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { format } from "date-fns";
 
 const Index = () => {
+  const { data: events, isLoading } = useQuery({
+    queryKey: ["upcoming-events"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("is_published", true)
+        .gte("event_date", new Date().toISOString())
+        .order("event_date", { ascending: true })
+        .limit(3);
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
@@ -119,27 +138,22 @@ const Index = () => {
             </div>
             
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              <EventCard
-                title="Spring Faith Convention"
-                date="March 15-17, 2025"
-                location="Grace Community Center"
-                description="Join us for three days of worship, fellowship, and spiritual renewal as we gather together in faith."
-                imageUrl={worshipImage}
-              />
-              <EventCard
-                title="Youth Leadership Summit"
-                date="April 22, 2025"
-                location="Hope Church"
-                description="Empowering young adults to lead with faith and purpose in their communities and churches."
-                imageUrl={communityImage}
-              />
-              <EventCard
-                title="Community Outreach Day"
-                date="May 10, 2025"
-                location="Various Locations"
-                description="Serving our community together through acts of kindness, compassion, and Christian love."
-                imageUrl={communityImage}
-              />
+              {isLoading ? (
+                <p className="col-span-3 text-center text-muted-foreground">Loading events...</p>
+              ) : events && events.length > 0 ? (
+                events.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    title={event.title}
+                    date={format(new Date(event.event_date), "MMMM d, yyyy")}
+                    location={event.location}
+                    description={event.description || ""}
+                    imageUrl={event.image_url || worshipImage}
+                  />
+                ))
+              ) : (
+                <p className="col-span-3 text-center text-muted-foreground">No upcoming events at this time.</p>
+              )}
             </div>
             
             <div className="text-center mt-12">
