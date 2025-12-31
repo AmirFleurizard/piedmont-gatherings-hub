@@ -12,12 +12,36 @@ import { useToast } from "@/hooks/use-toast";
 import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import worshipImage from "@/assets/worship.jpg";
+import { z } from "zod";
+
+// Zod schema for registration validation
+const registrationSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(1, "Name is required")
+    .max(100, "Name must be less than 100 characters"),
+  email: z.string()
+    .trim()
+    .email("Invalid email address")
+    .max(255, "Email must be less than 255 characters"),
+  phone: z.string()
+    .trim()
+    .regex(/^[+\d\s()\-]*$/, "Invalid phone number format")
+    .max(20, "Phone number must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
+  numTickets: z.number()
+    .int("Number of tickets must be a whole number")
+    .min(1, "At least 1 ticket is required")
+    .max(10, "Maximum 10 tickets per registration"),
+});
 
 const EventDetail = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isRegistering, setIsRegistering] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -42,12 +66,28 @@ const EventDetail = () => {
 
   const registerMutation = useMutation({
     mutationFn: async () => {
+      // Validate form data with zod schema
+      const validationResult = registrationSchema.safeParse({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || undefined,
+        numTickets: formData.numTickets,
+      });
+
+      if (!validationResult.success) {
+        const errors = validationResult.error.flatten().fieldErrors;
+        const firstError = Object.values(errors).flat()[0] || "Validation failed";
+        throw new Error(firstError);
+      }
+
+      const validatedData = validationResult.data;
+
       // First reserve the spots
       const { data: reserved, error: reserveError } = await supabase.rpc(
         "reserve_event_spots",
         {
           _event_id: eventId!,
-          _num_tickets: formData.numTickets,
+          _num_tickets: validatedData.numTickets,
         }
       );
 
@@ -56,14 +96,14 @@ const EventDetail = () => {
         throw new Error("Not enough spots available");
       }
 
-      // Create the registration
+      // Create the registration with validated data
       const { error: insertError } = await supabase.from("registrations").insert({
         event_id: eventId!,
-        attendee_name: formData.name,
-        attendee_email: formData.email,
-        attendee_phone: formData.phone || null,
-        num_tickets: formData.numTickets,
-        total_amount: event?.is_free ? 0 : (event?.price || 0) * formData.numTickets,
+        attendee_name: validatedData.name,
+        attendee_email: validatedData.email,
+        attendee_phone: validatedData.phone || null,
+        num_tickets: validatedData.numTickets,
+        total_amount: event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets,
         payment_status: event?.is_free ? "free" : "pending",
         registration_status: event?.is_free ? "confirmed" : "pending",
       });
@@ -72,7 +112,7 @@ const EventDetail = () => {
         // Release the spots if registration failed
         await supabase.rpc("release_event_spots", {
           _event_id: eventId!,
-          _num_tickets: formData.numTickets,
+          _num_tickets: validatedData.numTickets,
         });
         throw insertError;
       }
