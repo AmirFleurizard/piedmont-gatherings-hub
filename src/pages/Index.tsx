@@ -4,8 +4,8 @@ import EventCard from "@/components/EventCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
-import communityImage from "@/assets/community.jpg";
-import worshipImage from "@/assets/worship.jpg";
+import communityImage from "@/assets/congregation-worship.jpg";
+import worshipImage from "@/assets/choir-singing.jpg";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -82,8 +82,8 @@ const Index = () => {
               <div>
                 <img 
                   src={communityImage} 
-                  alt="Community serving together" 
-                  className="rounded-lg shadow-xl"
+                  alt="Congregation in worship" 
+                  className="rounded-lg shadow-xl aspect-video object-cover w-full"
                 />
               </div>
               <div>
@@ -119,8 +119,8 @@ const Index = () => {
               <div className="order-1 md:order-2">
                 <img 
                   src={worshipImage} 
-                  alt="Worship service" 
-                  className="rounded-lg shadow-xl"
+                  alt="Choir singing during service" 
+                  className="rounded-lg shadow-xl aspect-video object-cover w-full"
                 />
               </div>
             </div>
