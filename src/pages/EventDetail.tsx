@@ -97,16 +97,20 @@ const EventDetail = () => {
       }
 
       // Create the registration with validated data
-      const { error: insertError } = await supabase.from("registrations").insert({
-        event_id: eventId!,
-        attendee_name: validatedData.name,
-        attendee_email: validatedData.email,
-        attendee_phone: validatedData.phone || null,
-        num_tickets: validatedData.numTickets,
-        total_amount: event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets,
-        payment_status: event?.is_free ? "free" : "pending",
-        registration_status: event?.is_free ? "confirmed" : "pending",
-      });
+      const { data: registrationData, error: insertError } = await supabase
+        .from("registrations")
+        .insert({
+          event_id: eventId!,
+          attendee_name: validatedData.name,
+          attendee_email: validatedData.email,
+          attendee_phone: validatedData.phone || null,
+          num_tickets: validatedData.numTickets,
+          total_amount: event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets,
+          payment_status: event?.is_free ? "free" : "pending",
+          registration_status: event?.is_free ? "confirmed" : "pending",
+        })
+        .select("id")
+        .single();
 
       if (insertError) {
         // Release the spots if registration failed
@@ -116,12 +120,45 @@ const EventDetail = () => {
         });
         throw insertError;
       }
+
+      // Send confirmation email (don't fail registration if email fails)
+      try {
+        const totalPrice = event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets;
+        const eventDate = format(new Date(event!.event_date), "EEEE, MMMM d, yyyy 'at' h:mm a");
+        
+        const emailResponse = await supabase.functions.invoke("send-registration-confirmation", {
+          body: {
+            attendeeName: validatedData.name,
+            attendeeEmail: validatedData.email,
+            eventTitle: event!.title,
+            eventDate: eventDate,
+            eventLocation: event!.location,
+            numTickets: validatedData.numTickets,
+            totalPrice: totalPrice,
+            registrationId: registrationData.id,
+          },
+        });
+
+        if (emailResponse.error) {
+          console.error("Failed to send confirmation email:", emailResponse.error);
+        } else {
+          // Update confirmation_sent flag
+          await supabase
+            .from("registrations")
+            .update({ confirmation_sent: true })
+            .eq("id", registrationData.id);
+        }
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError);
+      }
+
+      return registrationData;
     },
     onSuccess: () => {
       toast({
         title: "Registration successful!",
         description: event?.is_free
-          ? "You're all set! Check your email for confirmation."
+          ? "You're all set! A confirmation email has been sent to your inbox."
           : "Your registration is pending. Payment processing will be available soon.",
       });
       navigate("/events");
