@@ -1,6 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import communityImage from "@/assets/community.jpg";
+import leadersImage from "@/assets/church-leaders.jpg";
 
 const About = () => {
   return (
@@ -14,7 +14,7 @@ const About = () => {
               <h1 className="text-5xl font-bold mb-8 text-primary text-center">About Us</h1>
 
               <div className="mb-12">
-                <img src={communityImage} alt="Our community" className="w-full rounded-lg shadow-xl mb-8" />
+                <img src={leadersImage} alt="Our community" className="w-full rounded-lg shadow-xl mb-8" />
               </div>
 
               <div className="prose prose-lg max-w-none">
