@@ -25,7 +25,7 @@ const officers: StaffMember[] = [
 const trustees: StaffMember[] = [
   { name: "Elder Louis Preston", role: "Trustee" },
   { name: "Mauri Wimbush", role: "Trustee" },
-  { name: "Merinda Easley", role: "Trustee" },
+  { name: "Rev. Merinda Easley", role: "Trustee" },
 ];
 
 const membersAtLarge: StaffMember[] = [
