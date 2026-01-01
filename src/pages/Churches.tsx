@@ -116,7 +116,7 @@ const churches: Church[] = [
     address: "730 Loudon Avenue NW",
     city: "Roanoke, Virginia 24016",
     phone: "(540) 342-8852",
-    website: "https://loudonavenuecc.org/",
+    website: "www.lacc-dc.org",
   },
   {
     name: "Meadow Christian Church",
@@ -124,11 +124,10 @@ const churches: Church[] = [
     address: "1140 Meadowood Trail",
     city: "Martinsville, Virginia 24112",
     phone: "(276) 957-1940",
-    website: "www.meadowchristianchurchdoc.org",
   },
   {
     name: "Middle Fork Christian Church",
-    pastor: "Rev. Anderson Hicks, II",
+    pastor: "Rev. Anderson Hicks, III",
     address: "2216 East First Street",
     city: "Winston-Salem, NC 27101",
     phone: "(336) 777-0418",
@@ -149,8 +148,7 @@ const churches: Church[] = [
     address: "1515 Britton Street",
     city: "Greensboro, NC 27406",
     phone: "(336) 275-7988",
-    email: "mpccd@triad.twebc.com",
-    website: "mtpleasantgreensboro.com",
+    email: "mpccd@att.net",
   },
   {
     name: "Mount Zion Christian Church",
