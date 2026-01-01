@@ -17,9 +17,9 @@ const officers: StaffMember[] = [
   { name: "Rev. Kenneth Hooker", role: "Moderator Elect" },
   { name: "VACANT", role: "Vice Moderator" },
   { name: "Sister Melodie Ferguson", role: "Secretary" },
-  { name: "Sister Jennifer Wimbush", role: "Assistant Secretary" },
+  { name: "Jennifer Wimbush", role: "Assistant Secretary" },
   { name: "Deacon Mildred Preston", role: "Treasurer" },
-  { name: "Sister Agnes Ziegler", role: "Financial Secretary" },
+  { name: "Sister Agnes Zigler", role: "Financial Secretary" },
 ];
 
 const trustees: StaffMember[] = [
