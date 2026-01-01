@@ -16,7 +16,7 @@ const Contact = () => {
     email: "",
     phone: "",
     subject: "",
-    message: ""
+    message: "",
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,16 +30,16 @@ const Contact = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      
+
       <main className="flex-1">
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -47,8 +47,8 @@ const Contact = () => {
               <div className="text-center mb-16">
                 <h1 className="text-5xl font-bold mb-6 text-primary">Contact Us</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  We'd love to hear from you! Whether you have questions about upcoming events, 
-                  want to learn more about our district, or need assistance, we're here to help.
+                  We'd love to hear from you! Whether you have questions about upcoming events, want to learn more about
+                  our district, or need assistance, we're here to help.
                 </p>
               </div>
 
@@ -57,9 +57,7 @@ const Contact = () => {
                   <Card className="mb-8">
                     <CardHeader>
                       <CardTitle className="text-2xl">Get In Touch</CardTitle>
-                      <CardDescription>
-                        Fill out the form and we'll get back to you as soon as possible
-                      </CardDescription>
+                      <CardDescription>Fill out the form and we'll get back to you as soon as possible</CardDescription>
                     </CardHeader>
                     <CardContent>
                       <form onSubmit={handleSubmit} className="space-y-6">
@@ -75,7 +73,7 @@ const Contact = () => {
                             className="mt-2"
                           />
                         </div>
-                        
+
                         <div>
                           <Label htmlFor="email">Email Address *</Label>
                           <Input
@@ -89,7 +87,7 @@ const Contact = () => {
                             className="mt-2"
                           />
                         </div>
-                        
+
                         <div>
                           <Label htmlFor="phone">Phone Number</Label>
                           <Input
@@ -102,7 +100,7 @@ const Contact = () => {
                             className="mt-2"
                           />
                         </div>
-                        
+
                         <div>
                           <Label htmlFor="subject">Subject *</Label>
                           <Input
@@ -115,7 +113,7 @@ const Contact = () => {
                             className="mt-2"
                           />
                         </div>
-                        
+
                         <div>
                           <Label htmlFor="message">Message *</Label>
                           <Textarea
@@ -128,7 +126,7 @@ const Contact = () => {
                             className="mt-2 min-h-[150px]"
                           />
                         </div>
-                        
+
                         <Button type="submit" variant="secondary" size="lg" className="w-full">
                           Send Message
                         </Button>
@@ -149,22 +147,22 @@ const Contact = () => {
                         </div>
                         <div>
                           <h3 className="font-semibold text-lg mb-1">Email</h3>
-                          <a 
-                            href="mailto:info@piedmontconnect.org"
+                          <a
+                            href="mailto:pdcconvention@gmail.com"
                             className="text-muted-foreground hover:text-accent transition-colors"
                           >
-                            info@piedmontconnect.org
+                            pdcconvention@gmail.com
                           </a>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-start gap-4">
                         <div className="bg-accent/10 p-3 rounded-full">
                           <Phone className="h-6 w-6 text-accent" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-lg mb-1">Phone</h3>
-                          <a 
+                          <a
                             href="tel:+17045550100"
                             className="text-muted-foreground hover:text-accent transition-colors"
                           >
@@ -172,7 +170,7 @@ const Contact = () => {
                           </a>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-start gap-4">
                         <div className="bg-accent/10 p-3 rounded-full">
                           <MapPin className="h-6 w-6 text-accent" />
@@ -180,7 +178,8 @@ const Contact = () => {
                         <div>
                           <h3 className="font-semibold text-lg mb-1">District Office</h3>
                           <p className="text-muted-foreground">
-                            123 Convention Drive<br />
+                            123 Convention Drive
+                            <br />
                             Charlotte, NC 28202
                           </p>
                         </div>
@@ -218,7 +217,7 @@ const Contact = () => {
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );
