@@ -58,6 +58,8 @@ export type Database = {
           description: string | null
           end_date: string | null
           event_date: string
+          external_registration_url: string | null
+          has_unlimited_capacity: boolean
           id: string
           image_url: string | null
           is_free: boolean
@@ -75,6 +77,8 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           event_date: string
+          external_registration_url?: string | null
+          has_unlimited_capacity?: boolean
           id?: string
           image_url?: string | null
           is_free?: boolean
@@ -92,6 +96,8 @@ export type Database = {
           description?: string | null
           end_date?: string | null
           event_date?: string
+          external_registration_url?: string | null
+          has_unlimited_capacity?: boolean
           id?: string
           image_url?: string | null
           is_free?: boolean

@@ -107,21 +107,27 @@ const EventsManagement = () => {
         imageUrl = await uploadImage(imageFile);
       }
 
+      const hasUnlimitedCapacity = formData.get("has_unlimited_capacity") === "true";
+      const capacity = hasUnlimitedCapacity ? 999999 : (parseInt(formData.get("capacity") as string) || 100);
+      const externalUrl = formData.get("external_registration_url") as string;
+
       const eventData = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         location: formData.get("location") as string,
         event_date: formData.get("event_date") as string,
         end_date: formData.get("end_date") as string || null,
-        capacity: parseInt(formData.get("capacity") as string) || 100,
+        capacity: capacity,
         spots_remaining: editingEvent 
           ? editingEvent.spots_remaining 
-          : parseInt(formData.get("capacity") as string) || 100,
+          : capacity,
+        has_unlimited_capacity: hasUnlimitedCapacity,
         is_free: formData.get("is_free") === "true",
         price: formData.get("is_free") === "true" ? 0 : parseFloat(formData.get("price") as string) || 0,
         is_published: formData.get("is_published") === "true",
         church_id: formData.get("church_id") as string,
         image_url: imageUrl,
+        external_registration_url: externalUrl || null,
       };
 
       if (editingEvent) {
@@ -318,6 +324,22 @@ const EventsManagement = () => {
               </div>
 
               <div className="space-y-2">
+                <div className="flex items-center gap-2 mb-2">
+                  <Switch
+                    id="has_unlimited_capacity"
+                    name="has_unlimited_capacity"
+                    defaultChecked={editingEvent?.has_unlimited_capacity ?? false}
+                    onCheckedChange={(checked) => {
+                      const capacityInput = document.getElementById("capacity") as HTMLInputElement;
+                      if (capacityInput) {
+                        capacityInput.disabled = checked;
+                        if (checked) capacityInput.value = "100";
+                      }
+                    }}
+                  />
+                  <input type="hidden" name="has_unlimited_capacity" value="false" />
+                  <Label htmlFor="has_unlimited_capacity">Unlimited Capacity</Label>
+                </div>
                 <Label htmlFor="capacity">Capacity</Label>
                 <Input
                   id="capacity"
@@ -325,8 +347,22 @@ const EventsManagement = () => {
                   type="number"
                   min={1}
                   defaultValue={editingEvent?.capacity || 100}
-                  required
+                  disabled={editingEvent?.has_unlimited_capacity ?? false}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="external_registration_url">External Registration URL (optional)</Label>
+                <Input
+                  id="external_registration_url"
+                  name="external_registration_url"
+                  type="url"
+                  placeholder="https://example.com/register"
+                  defaultValue={editingEvent?.external_registration_url || ""}
+                />
+                <p className="text-xs text-muted-foreground">
+                  If set, the registration button will link to this URL instead of the built-in form.
+                </p>
               </div>
 
               <div className="space-y-2">
