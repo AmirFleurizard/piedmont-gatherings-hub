@@ -63,10 +63,6 @@ const About = () => {
                       <strong className="text-foreground">Growth:</strong> Fostering spiritual development and
                       leadership excellence
                     </li>
-                    <li>
-                      <strong className="text-foreground">Inclusion:</strong> Welcoming adults of all ages and
-                      backgrounds
-                    </li>
                   </ul>
                 </div>
 
