@@ -8,11 +8,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mail, Phone, MapPin } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,32 +19,14 @@ const Contact = () => {
     message: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const { error } = await supabase.functions.invoke("send-contact-email", {
-        body: formData,
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Message Sent!",
-        description: "Thank you for contacting us. We'll respond within 1-2 business days.",
-      });
-      setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-    } catch (error: any) {
-      console.error("Error sending message:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again or email us directly.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Form submission logic would go here
+    toast({
+      title: "Message Sent!",
+      description: "Thank you for contacting us. We'll respond within 1-2 business days.",
+    });
+    setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -147,8 +127,8 @@ const Contact = () => {
                           />
                         </div>
 
-                        <Button type="submit" variant="secondary" size="lg" className="w-full" disabled={isSubmitting}>
-                          {isSubmitting ? "Sending..." : "Send Message"}
+                        <Button type="submit" variant="secondary" size="lg" className="w-full">
+                          Send Message
                         </Button>
                       </form>
                     </CardContent>
@@ -180,15 +160,15 @@ const Contact = () => {
                         <div className="bg-accent/10 p-3 rounded-full">
                           <Phone className="h-6 w-6 text-accent" />
                         </div>
-                        <div>
+                        {/* <div>
                           <h3 className="font-semibold text-lg mb-1">Phone</h3>
                           <a
                             href="tel:+17045550100"
                             className="text-muted-foreground hover:text-accent transition-colors"
                           >
-                            (704) 555-0100
+                            (336) 555-0100
                           </a>
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className="flex items-start gap-4">
@@ -198,9 +178,9 @@ const Contact = () => {
                         <div>
                           <h3 className="font-semibold text-lg mb-1">District Office</h3>
                           <p className="text-muted-foreground">
-                            123 Convention Drive
+                            3300 Wentworth Street
                             <br />
-                            Charlotte, NC 28202
+                            Reidsville, NC 27320
                           </p>
                         </div>
                       </div>
