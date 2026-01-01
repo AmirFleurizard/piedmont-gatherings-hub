@@ -90,9 +90,9 @@ const Index = () => {
               <div>
                 <h2 className="text-4xl font-bold mb-6 text-primary">Building Community</h2>
                 <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                  We believe in the power of community and fellowship. Through our conventions and events, we create
-                  spaces where adults of all ages can connect, share their faith journey, and support one another in
-                  meaningful ways.
+                  We believe in the power of community and fellowship. Through our Convention, trainings, and events, we
+                  create spaces where adults and youth can connect, share their faith journey, and support one another
+                  in meaningful ways.
                 </p>
                 <Button variant="secondary" asChild>
                   <a href="/churches">Explore Our Churches</a>
@@ -110,7 +110,7 @@ const Index = () => {
                 <h2 className="text-4xl font-bold mb-6 text-primary">Worship Together</h2>
                 <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
                   Experience transformative worship services that blend traditional values with contemporary expression.
-                  Our conventions feature inspiring messages, uplifting music, and opportunities for spiritual renewal
+                  Our Convention features inspiring messages, uplifting music, and opportunities for spiritual renewal
                   and growth.
                 </p>
                 <Button variant="secondary" asChild>
@@ -134,7 +134,7 @@ const Index = () => {
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-4 text-primary">Upcoming Events</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Join us for inspiring gatherings and meaningful experiences
+                Join us for impactful educational opportunities, inspriing gatherings, and meaningful experiences
               </p>
             </div>
 
