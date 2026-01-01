@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Loader2 } from "lucide-react";
+import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Loader2, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import worshipImage from "@/assets/worship.jpg";
 import { z } from "zod";
@@ -209,7 +209,8 @@ const EventDetail = () => {
     );
   }
 
-  const spotsAvailable = event.spots_remaining > 0;
+  const spotsAvailable = event.has_unlimited_capacity || event.spots_remaining > 0;
+  const hasExternalRegistration = !!event.external_registration_url;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -250,10 +251,12 @@ const EventDetail = () => {
                   <MapPin className="h-5 w-5" />
                   {event.location}
                 </span>
-                <span className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  {event.spots_remaining} of {event.capacity} spots remaining
-                </span>
+                {!event.has_unlimited_capacity && (
+                  <span className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    {event.spots_remaining} of {event.capacity} spots remaining
+                  </span>
+                )}
                 <span className="flex items-center gap-2">
                   <DollarSign className="h-5 w-5" />
                   {event.is_free ? "Free" : `$${event.price}`}
@@ -279,13 +282,35 @@ const EventDetail = () => {
                 <CardHeader>
                   <CardTitle>Register for this Event</CardTitle>
                   <CardDescription>
-                    {spotsAvailable
+                    {event.has_unlimited_capacity
+                      ? "Open registration"
+                      : spotsAvailable
                       ? `${event.spots_remaining} spots remaining`
                       : "This event is fully booked"}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {spotsAvailable ? (
+                  {hasExternalRegistration ? (
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">
+                        Registration for this event is handled externally.
+                      </p>
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        asChild
+                      >
+                        <a 
+                          href={event.external_registration_url!} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                        >
+                          Register Now
+                          <ExternalLink className="ml-2 h-4 w-4" />
+                        </a>
+                      </Button>
+                    </div>
+                  ) : spotsAvailable ? (
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name *</Label>
@@ -324,23 +349,25 @@ const EventDetail = () => {
                         />
                       </div>
 
-                      <div className="space-y-2">
-                        <Label htmlFor="numTickets">Number of Tickets</Label>
-                        <Input
-                          id="numTickets"
-                          type="number"
-                          min={1}
-                          max={Math.min(10, event.spots_remaining)}
-                          value={formData.numTickets}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              numTickets: parseInt(e.target.value) || 1,
-                            })
-                          }
-                          required
-                        />
-                      </div>
+                      {!event.has_unlimited_capacity && (
+                        <div className="space-y-2">
+                          <Label htmlFor="numTickets">Number of Tickets</Label>
+                          <Input
+                            id="numTickets"
+                            type="number"
+                            min={1}
+                            max={Math.min(10, event.spots_remaining)}
+                            value={formData.numTickets}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                numTickets: parseInt(e.target.value) || 1,
+                              })
+                            }
+                            required
+                          />
+                        </div>
+                      )}
 
                       {!event.is_free && (
                         <div className="p-4 bg-muted rounded-lg">
