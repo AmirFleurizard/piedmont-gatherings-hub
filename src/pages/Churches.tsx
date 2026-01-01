@@ -63,12 +63,14 @@ const churches: Church[] = [
     city: "Reidsville, NC 27320",
     phone: "(336) 349-3910",
     email: "fcblessed1893@gmail.com",
+    website: "www.feccovenant.org",
   },
   {
     name: "First Christian Church - Stuart",
     pastor: "VACANT",
     address: "113 Forest Lane, P.O. Box 1289",
     city: "Stuart, Virginia 24171",
+    website: "disciples.org/congregation/listing/first-christian-church",
   },
   {
     name: "Fresh Harvest Christian Church",
@@ -87,11 +89,12 @@ const churches: Church[] = [
   },
   {
     name: "Jerusalem Christian Church",
-    pastor: "Rev. Greg Holt",
+    pastor: "Rev. Robert Smith",
     address: "35 Meadow Garden Lane",
     city: "Martinsville, Virginia 24112",
     phone: "(276) 638-6507",
     email: "jechurch@centurylink.net",
+    website: "www.jerusalemdoc.org",
   },
   {
     name: "Little Bethlehem Christian Church",
@@ -109,11 +112,11 @@ const churches: Church[] = [
   },
   {
     name: "Loudon Avenue Christian Church",
-    pastor: "Rev. Dr, Bill Lee (Interim)",
+    pastor: "Rev. Bill Lee",
     address: "730 Loudon Avenue NW",
     city: "Roanoke, Virginia 24016",
     phone: "(540) 342-8852",
-    website: "www.lacc-dc.org",
+    website: "https://loudonavenuecc.org/",
   },
   {
     name: "Meadow Christian Church",
