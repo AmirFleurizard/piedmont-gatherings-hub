@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Calendar, MapPin } from "lucide-react";
 import { format } from "date-fns";
-import worshipImage from "@/assets/worship.jpg";
+import defaultEventImage from "@/assets/default-event.jpg";
 
 const Events = () => {
   const { data: events, isLoading } = useQuery({
@@ -54,7 +54,7 @@ const Events = () => {
                     <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                       <div className="h-48 overflow-hidden">
                         <img
-                          src={event.image_url || worshipImage}
+                          src={event.image_url || defaultEventImage}
                           alt={event.title}
                           className="w-full h-full object-cover"
                         />
