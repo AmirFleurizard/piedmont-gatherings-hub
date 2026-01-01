@@ -27,6 +27,9 @@ const EventsManagement = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [hasUnlimitedCapacity, setHasUnlimitedCapacity] = useState(false);
+  const [isFree, setIsFree] = useState(true);
+  const [isPublished, setIsPublished] = useState(false);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -107,7 +110,6 @@ const EventsManagement = () => {
         imageUrl = await uploadImage(imageFile);
       }
 
-      const hasUnlimitedCapacity = formData.get("has_unlimited_capacity") === "true";
       const capacity = hasUnlimitedCapacity ? 999999 : (parseInt(formData.get("capacity") as string) || 100);
       const externalUrl = formData.get("external_registration_url") as string;
 
@@ -122,9 +124,9 @@ const EventsManagement = () => {
           ? editingEvent.spots_remaining 
           : capacity,
         has_unlimited_capacity: hasUnlimitedCapacity,
-        is_free: formData.get("is_free") === "true",
-        price: formData.get("is_free") === "true" ? 0 : parseFloat(formData.get("price") as string) || 0,
-        is_published: formData.get("is_published") === "true",
+        is_free: isFree,
+        price: isFree ? 0 : parseFloat(formData.get("price") as string) || 0,
+        is_published: isPublished,
         church_id: formData.get("church_id") as string,
         image_url: imageUrl,
         external_registration_url: externalUrl || null,
@@ -207,6 +209,9 @@ const EventsManagement = () => {
     setEditingEvent(event);
     setImagePreview(event.image_url || null);
     setImageFile(null);
+    setHasUnlimitedCapacity(event.has_unlimited_capacity);
+    setIsFree(event.is_free);
+    setIsPublished(event.is_published);
     setIsDialogOpen(true);
   };
 
@@ -214,6 +219,9 @@ const EventsManagement = () => {
     setEditingEvent(null);
     setImageFile(null);
     setImagePreview(null);
+    setHasUnlimitedCapacity(false);
+    setIsFree(true);
+    setIsPublished(false);
     setIsDialogOpen(true);
   };
 
@@ -327,28 +335,23 @@ const EventsManagement = () => {
                 <div className="flex items-center gap-2 mb-2">
                   <Switch
                     id="has_unlimited_capacity"
-                    name="has_unlimited_capacity"
-                    defaultChecked={editingEvent?.has_unlimited_capacity ?? false}
-                    onCheckedChange={(checked) => {
-                      const capacityInput = document.getElementById("capacity") as HTMLInputElement;
-                      if (capacityInput) {
-                        capacityInput.disabled = checked;
-                        if (checked) capacityInput.value = "100";
-                      }
-                    }}
+                    checked={hasUnlimitedCapacity}
+                    onCheckedChange={setHasUnlimitedCapacity}
                   />
-                  <input type="hidden" name="has_unlimited_capacity" value="false" />
                   <Label htmlFor="has_unlimited_capacity">Unlimited Capacity</Label>
                 </div>
-                <Label htmlFor="capacity">Capacity</Label>
-                <Input
-                  id="capacity"
-                  name="capacity"
-                  type="number"
-                  min={1}
-                  defaultValue={editingEvent?.capacity || 100}
-                  disabled={editingEvent?.has_unlimited_capacity ?? false}
-                />
+                {!hasUnlimitedCapacity && (
+                  <>
+                    <Label htmlFor="capacity">Capacity</Label>
+                    <Input
+                      id="capacity"
+                      name="capacity"
+                      type="number"
+                      min={1}
+                      defaultValue={editingEvent?.capacity || 100}
+                    />
+                  </>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -420,42 +423,34 @@ const EventsManagement = () => {
                 <div className="flex items-center gap-2">
                   <Switch
                     id="is_free"
-                    name="is_free"
-                    defaultChecked={editingEvent?.is_free ?? true}
-                    onCheckedChange={(checked) => {
-                      const priceInput = document.getElementById("price") as HTMLInputElement;
-                      if (priceInput) {
-                        priceInput.disabled = checked;
-                        if (checked) priceInput.value = "0";
-                      }
-                    }}
+                    checked={isFree}
+                    onCheckedChange={setIsFree}
                   />
-                  <input type="hidden" name="is_free" value="false" />
                   <Label htmlFor="is_free">Free Event</Label>
                 </div>
                 <div className="flex items-center gap-2">
                   <Switch
                     id="is_published"
-                    name="is_published"
-                    defaultChecked={editingEvent?.is_published ?? false}
+                    checked={isPublished}
+                    onCheckedChange={setIsPublished}
                   />
-                  <input type="hidden" name="is_published" value="false" />
                   <Label htmlFor="is_published">Published</Label>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="price">Price ($)</Label>
-                <Input
-                  id="price"
-                  name="price"
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  defaultValue={editingEvent?.price || 0}
-                  disabled={editingEvent?.is_free ?? true}
-                />
-              </div>
+              {!isFree && (
+                <div className="space-y-2">
+                  <Label htmlFor="price">Price ($)</Label>
+                  <Input
+                    id="price"
+                    name="price"
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    defaultValue={editingEvent?.price || 0}
+                  />
+                </div>
+              )}
 
               <div className="flex justify-end gap-2">
                 <Button
@@ -548,7 +543,7 @@ const EventsManagement = () => {
                     📅 {format(new Date(event.event_date), "MMM d, yyyy h:mm a")}
                   </span>
                   <span>
-                    👥 {event.spots_remaining}/{event.capacity} spots
+                    👥 {event.has_unlimited_capacity ? "Unlimited" : `${event.spots_remaining}/${event.capacity} spots`}
                   </span>
                   <span>
                     💰 {event.is_free ? "Free" : `$${event.price}`}
