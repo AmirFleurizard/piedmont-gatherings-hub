@@ -40,7 +40,7 @@ const churches: Church[] = [
     address: "161 Reid Street, P.O. Box 1074",
     city: "Chatham, Virginia 24531",
     phone: "(434) 432-3645",
-    email: "cwhemming@comcast.net",
+    // email: "cwhemming@comcast.net",
   },
   {
     name: "Fayette Street Christian Church",
@@ -62,15 +62,15 @@ const churches: Church[] = [
     address: "206 Holderby Street, P.O. Box 1025",
     city: "Reidsville, NC 27320",
     phone: "(336) 349-3910",
-    email: "fcblessed1893@gmail.com",
-    website: "www.feccovenant.org",
+    // email: "fcblessed1893@gmail.com",
+    // website: "www.feccovenant.org",
   },
   {
     name: "First Christian Church - Stuart",
     pastor: "VACANT",
     address: "113 Forest Lane, P.O. Box 1289",
     city: "Stuart, Virginia 24171",
-    website: "disciples.org/congregation/listing/first-christian-church",
+    // website: "disciples.org/congregation/listing/first-christian-church",
   },
   {
     name: "Fresh Harvest Christian Church",
@@ -85,7 +85,7 @@ const churches: Church[] = [
     address: "336 Iron Belt Ln., P.O. Box 814",
     city: "Stuart, Virginia 24171",
     phone: "(276) 692-5350",
-    email: "PastorKJTG21@gmail.com",
+    // email: "PastorKJTG21@gmail.com",
   },
   {
     name: "Jerusalem Christian Church",
@@ -93,8 +93,8 @@ const churches: Church[] = [
     address: "35 Meadow Garden Lane",
     city: "Martinsville, Virginia 24112",
     phone: "(276) 638-6507",
-    email: "jechurch@centurylink.net",
-    website: "www.jerusalemdoc.org",
+    // email: "jechurch@centurylink.net",
+    // website: "www.jerusalemdoc.org",
   },
   {
     name: "Little Bethlehem Christian Church",
@@ -116,7 +116,7 @@ const churches: Church[] = [
     address: "730 Loudon Avenue NW",
     city: "Roanoke, Virginia 24016",
     phone: "(540) 342-8852",
-    website: "www.lacc-dc.org",
+    // website: "www.lacc-dc.org",
   },
   {
     name: "Meadow Christian Church",
@@ -124,7 +124,7 @@ const churches: Church[] = [
     address: "1140 Meadowood Trail",
     city: "Martinsville, Virginia 24112",
     phone: "(276) 957-1940",
-    website: "www.meadowchristianchurchdoc.org",
+    // website: "www.meadowchristianchurchdoc.org",
   },
   {
     name: "Middle Fork Christian Church",
@@ -132,7 +132,7 @@ const churches: Church[] = [
     address: "2216 East First Street",
     city: "Winston-Salem, NC 27101",
     phone: "(336) 777-0418",
-    email: "middlefork@triad.rr.com",
+    // email: "middlefork@triad.rr.com",
   },
   {
     name: "Mount Olive East Christian Church",
@@ -140,8 +140,8 @@ const churches: Church[] = [
     address: "3611 Spencer-Preston Road",
     city: "Martinsville, Virginia 24112",
     phone: "(276) 957-3546",
-    email: "moechurch@.comcast.net",
-    website: "www.kimbanet.com/~moe/",
+    // email: "moechurch@.comcast.net",
+    // website: "www.kimbanet.com/~moe/",
   },
   {
     name: "Mount Pleasant Christian Church",
@@ -149,8 +149,8 @@ const churches: Church[] = [
     address: "1515 Britton Street",
     city: "Greensboro, NC 27406",
     phone: "(336) 275-7988",
-    email: "mpccd@triad.twebc.com",
-    website: "mtpleasantgreensboro.com",
+    // email: "mpccd@triad.twebc.com",
+    // website: "mtpleasantgreensboro.com",
   },
   {
     name: "Mount Zion Christian Church",
@@ -165,7 +165,7 @@ const churches: Church[] = [
     address: "9 Brandermill Road",
     city: "Fieldale, Virginia 24089",
     phone: "(276) 673-6130",
-    email: "newbethelcc@yahoo.com",
+    // email: "newbethelcc@yahoo.com",
   },
   {
     name: "Shaw Christian Church",
