@@ -232,7 +232,7 @@ const EventDetail = () => {
                 <img
                   src={event.image_url || worshipImage}
                   alt={event.title}
-                  className="w-full h-64 md:h-96 object-cover"
+                  className="w-full h-auto"
                 />
               </div>
 
