@@ -52,13 +52,13 @@ const churches: Church[] = [
   {
     name: "First Christian Church - Concord",
     pastor: "Rev. Steven Mayhan",
-    address: "158 Rone Avenue, P.O. Box 1125",
+    address: "158 Rone Avenue SW, P.O. Box 1125",
     city: "Concord, NC 28025",
     phone: "(704) 786-6815",
   },
   {
     name: "First Christian Church - Reidsville",
-    pastor: "Dr. Jacqualyn McHenry",
+    pastor: "Dr. Jacqueline MeHenry",
     address: "206 Holderby Street, P.O. Box 1025",
     city: "Reidsville, NC 27320",
     phone: "(336) 349-3910",
