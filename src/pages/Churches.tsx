@@ -58,7 +58,7 @@ const churches: Church[] = [
   },
   {
     name: "First Christian Church - Reidsville",
-    pastor: "Dr. Jacqueline MeHenry",
+    pastor: "Dr. Jacqualyn McHenry",
     address: "206 Holderby Street, P.O. Box 1025",
     city: "Reidsville, NC 27320",
     phone: "(336) 349-3910",
@@ -180,7 +180,7 @@ const Churches = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      
+
       <main className="flex-1">
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -188,8 +188,8 @@ const Churches = () => {
               <div className="text-center mb-16">
                 <h1 className="text-5xl font-bold mb-6 text-primary">Our Churches</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  The Piedmont District is home to diverse congregations united in faith and purpose. 
-                  Find a church home where you can grow spiritually and serve alongside fellow believers.
+                  The Piedmont District is home to diverse congregations united in faith and purpose. Find a church home
+                  where you can grow spiritually and serve alongside fellow believers.
                 </p>
               </div>
 
@@ -207,14 +207,16 @@ const Churches = () => {
                         <div className="flex items-start gap-3">
                           <MapPin className="h-4 w-4 text-accent flex-shrink-0 mt-1" />
                           <span className="text-foreground">
-                            {church.address}<br />{church.city}
+                            {church.address}
+                            <br />
+                            {church.city}
                           </span>
                         </div>
-                        
+
                         {church.phone && (
                           <div className="flex items-center gap-3">
                             <Phone className="h-4 w-4 text-accent flex-shrink-0" />
-                            <a 
+                            <a
                               href={`tel:${church.phone}`}
                               className="text-foreground hover:text-accent transition-colors"
                             >
@@ -222,11 +224,11 @@ const Churches = () => {
                             </a>
                           </div>
                         )}
-                        
+
                         {church.email && (
                           <div className="flex items-center gap-3">
                             <Mail className="h-4 w-4 text-accent flex-shrink-0" />
-                            <a 
+                            <a
                               href={`mailto:${church.email}`}
                               className="text-accent hover:text-accent/80 transition-colors break-all"
                             >
@@ -234,12 +236,12 @@ const Churches = () => {
                             </a>
                           </div>
                         )}
-                        
+
                         {church.website && (
                           <div className="flex items-center gap-3">
                             <Globe className="h-4 w-4 text-accent flex-shrink-0" />
-                            <a 
-                              href={church.website.startsWith('http') ? church.website : `https://${church.website}`}
+                            <a
+                              href={church.website.startsWith("http") ? church.website : `https://${church.website}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-accent hover:text-accent/80 transition-colors break-all"
@@ -255,15 +257,13 @@ const Churches = () => {
               </div>
 
               <div className="mt-16 bg-muted/50 p-8 rounded-lg text-center">
-                <h2 className="text-2xl font-bold mb-4 text-primary">
-                  Interested in Joining Our District?
-                </h2>
+                <h2 className="text-2xl font-bold mb-4 text-primary">Interested in Joining Our District?</h2>
                 <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  If your church is interested in becoming part of the Piedmont District Convention, 
-                  we'd love to connect with you and explore partnership opportunities.
+                  If your church is interested in becoming part of the Piedmont District Convention, we'd love to
+                  connect with you and explore partnership opportunities.
                 </p>
-                <a 
-                  href="/contact" 
+                <a
+                  href="/contact"
                   className="inline-flex items-center justify-center px-6 py-3 bg-secondary text-secondary-foreground rounded-md hover:bg-secondary/90 transition-colors font-medium"
                 >
                   Contact Us
@@ -273,7 +273,7 @@ const Churches = () => {
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );
