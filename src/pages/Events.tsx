@@ -27,7 +27,7 @@ const Events = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      
+
       <main className="flex-1">
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -35,8 +35,7 @@ const Events = () => {
               <div className="text-center mb-16">
                 <h1 className="text-5xl font-bold mb-6 text-primary">Upcoming Events</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Join us for inspiring gatherings, meaningful worship, and opportunities to grow 
-                  in faith together. All events are open to adults ages 18 and up.
+                  Join us for inspiring gatherings, meaningful worship, and opportunities to grow in faith together.
                 </p>
               </div>
 
@@ -54,10 +53,10 @@ const Events = () => {
                   {events?.map((event) => (
                     <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                       <div className="h-48 overflow-hidden">
-                        <img 
-                          src={event.image_url || worshipImage} 
-                          alt={event.title} 
-                          className="w-full h-full object-cover" 
+                        <img
+                          src={event.image_url || worshipImage}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
                         />
                       </div>
                       <CardHeader>
@@ -81,9 +80,7 @@ const Events = () => {
                           <span className="text-secondary font-medium">
                             {event.is_free ? "Free" : `$${event.price}`}
                           </span>
-                          <span className="text-muted-foreground">
-                            {event.spots_remaining} spots left
-                          </span>
+                          <span className="text-muted-foreground">{event.spots_remaining} spots left</span>
                         </div>
                       </CardContent>
                       <CardFooter>
@@ -97,18 +94,14 @@ const Events = () => {
               )}
 
               <div className="bg-secondary/10 border-2 border-secondary p-8 rounded-lg">
-                <h2 className="text-3xl font-bold mb-4 text-primary text-center">
-                  Registration Information
-                </h2>
+                <h2 className="text-3xl font-bold mb-4 text-primary text-center">Registration Information</h2>
                 <p className="text-muted-foreground mb-6 text-center max-w-3xl mx-auto leading-relaxed">
-                  Most events require advance registration to help us prepare adequate seating, materials, 
-                  and refreshments.
+                  Most events require advance registration to help us prepare adequate seating, materials, and
+                  refreshments.
                 </p>
                 <div className="text-center">
-                  <p className="text-foreground mb-4">
-                    Questions about registration? Contact our events team:
-                  </p>
-                  <a 
+                  <p className="text-foreground mb-4">Questions about registration? Contact our events team:</p>
+                  <a
                     href="mailto:events@piedmontconnect.org"
                     className="text-accent hover:text-accent/80 transition-colors font-medium"
                   >
@@ -120,7 +113,7 @@ const Events = () => {
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );
