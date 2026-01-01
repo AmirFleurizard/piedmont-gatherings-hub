@@ -135,13 +135,20 @@ const Staff = () => {
               {/* Ministries */}
               <div>
                 <h2 className="text-3xl font-bold mb-8 text-primary text-center">Ministry Leaders</h2>
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {ministries.map((ministry, index) => (
                     <Card key={index} className="hover:shadow-lg transition-shadow">
-                      <CardContent className="pt-6">
-                        <h3 className="font-bold text-lg text-foreground mb-2">{ministry.name}</h3>
-                        <p className="text-muted-foreground">{ministry.leader}</p>
-                      </CardContent>
+                      <CardHeader className="text-center">
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
+                          {ministry.leader
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)}
+                        </div>
+                        <CardTitle className="text-lg">{ministry.leader}</CardTitle>
+                        <p className="text-secondary font-semibold">{ministry.name}</p>
+                      </CardHeader>
                     </Card>
                   ))}
                 </div>
