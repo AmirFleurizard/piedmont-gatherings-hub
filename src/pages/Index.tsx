@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-bg.jpg";
 import communityImage from "@/assets/congregation-worship.jpg";
 import worshipImage from "@/assets/choir-singing.jpg";
+import defaultEventImage from "@/assets/default-event.jpg";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -150,7 +151,7 @@ const Index = () => {
                     date={format(new Date(event.event_date), "MMMM d, yyyy")}
                     location={event.location}
                     description={event.description || ""}
-                    imageUrl={event.image_url || worshipImage}
+                    imageUrl={event.image_url || defaultEventImage}
                   />
                 ))
               ) : (
