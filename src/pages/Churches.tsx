@@ -124,10 +124,11 @@ const churches: Church[] = [
     address: "1140 Meadowood Trail",
     city: "Martinsville, Virginia 24112",
     phone: "(276) 957-1940",
+    website: "www.meadowchristianchurchdoc.org",
   },
   {
     name: "Middle Fork Christian Church",
-    pastor: "Rev. Anderson Hicks, III",
+    pastor: "Rev. Anderson Hicks, II",
     address: "2216 East First Street",
     city: "Winston-Salem, NC 27101",
     phone: "(336) 777-0418",
@@ -148,7 +149,8 @@ const churches: Church[] = [
     address: "1515 Britton Street",
     city: "Greensboro, NC 27406",
     phone: "(336) 275-7988",
-    email: "mpccd@att.net",
+    email: "mpccd@triad.twebc.com",
+    website: "mtpleasantgreensboro.com",
   },
   {
     name: "Mount Zion Christian Church",
@@ -186,8 +188,8 @@ const Churches = () => {
               <div className="text-center mb-16">
                 <h1 className="text-5xl font-bold mb-6 text-primary">Our Churches</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  The Piedmont District is home to diverse congregations united in faith and purpose. Find a church home
-                  where you can grow spiritually and serve alongside fellow believers.
+                  The Piedmont District Convention is home to diverse congregations united in faith and purpose. Find a
+                  church home where you can grow spiritually and serve alongside fellow believers.
                 </p>
               </div>
 
