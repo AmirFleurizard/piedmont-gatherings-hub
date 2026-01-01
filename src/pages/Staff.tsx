@@ -17,7 +17,7 @@ const officers: StaffMember[] = [
   { name: "Rev. Kenneth Hooker", role: "Moderator Elect" },
   { name: "VACANT", role: "Vice Moderator" },
   { name: "Sister Melodie Ferguson", role: "Secretary" },
-  { name: "Jennifer Wimbush", role: "Assistant Secretary" },
+  { name: "Sister Jennifer Wimbush", role: "Assistant Secretary" },
   { name: "Deacon Mildred Preston", role: "Treasurer" },
   { name: "Sister Agnes Ziegler", role: "Financial Secretary" },
 ];
@@ -51,7 +51,7 @@ const Staff = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navigation />
-      
+
       <main className="flex-1">
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4">
@@ -59,8 +59,8 @@ const Staff = () => {
               <div className="text-center mb-16">
                 <h1 className="text-5xl font-bold mb-6 text-primary">Our Leadership Team</h1>
                 <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Meet the dedicated leaders serving the Piedmont District Convention with passion, 
-                  wisdom, and commitment to advancing God's kingdom.
+                  Meet the dedicated leaders serving the Piedmont District Convention with passion, wisdom, and
+                  commitment to advancing God's kingdom.
                 </p>
               </div>
 
@@ -72,7 +72,13 @@ const Staff = () => {
                     <Card key={index} className="hover:shadow-lg transition-shadow">
                       <CardHeader className="text-center">
                         <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
-                          {member.name === "VACANT" ? "?" : member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {member.name === "VACANT"
+                            ? "?"
+                            : member.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")
+                                .slice(0, 2)}
                         </div>
                         <CardTitle className="text-lg">{member.name}</CardTitle>
                         <p className="text-secondary font-semibold">{member.role}</p>
@@ -90,7 +96,11 @@ const Staff = () => {
                     <Card key={index} className="hover:shadow-lg transition-shadow">
                       <CardHeader className="text-center">
                         <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
-                          {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {member.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)}
                         </div>
                         <CardTitle className="text-lg">{member.name}</CardTitle>
                         <p className="text-secondary font-semibold">{member.role}</p>
@@ -108,7 +118,11 @@ const Staff = () => {
                     <Card key={index} className="hover:shadow-lg transition-shadow">
                       <CardHeader className="text-center">
                         <div className="w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-4 flex items-center justify-center text-primary-foreground text-2xl font-bold">
-                          {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                          {member.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")
+                            .slice(0, 2)}
                         </div>
                         <CardTitle className="text-lg">{member.name}</CardTitle>
                         <p className="text-secondary font-semibold">{member.role}</p>
@@ -137,7 +151,8 @@ const Staff = () => {
               <div className="mt-12 bg-muted/50 p-8 rounded-lg text-center">
                 <h2 className="text-2xl font-bold mb-4 text-primary">District Office</h2>
                 <p className="text-muted-foreground">
-                  3300 Wentworth St.<br />
+                  3300 Wentworth St.
+                  <br />
                   Reidsville, NC
                 </p>
               </div>
@@ -145,7 +160,7 @@ const Staff = () => {
           </div>
         </section>
       </main>
-      
+
       <Footer />
     </div>
   );
