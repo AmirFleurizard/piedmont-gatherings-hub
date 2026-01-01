@@ -48,7 +48,7 @@ const About = () => {
                   <h3 className="text-2xl font-bold mb-4 text-primary">Our Core Values</h3>
                   <ul className="space-y-3 text-muted-foreground">
                     <li>
-                      <strong className="text-foreground">Faith:</strong> Grounded in biblical truth and centered on
+                      <strong className="text-foreground">Faith:</strong> Grounded in Biblical truth and centered on
                       Jesus Christ
                     </li>
                     <li>
@@ -62,6 +62,10 @@ const About = () => {
                     <li>
                       <strong className="text-foreground">Growth:</strong> Fostering spiritual development and
                       leadership excellence
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Inclusion:</strong> Welcoming adults of all ages and
+                      backgrounds
                     </li>
                   </ul>
                 </div>
