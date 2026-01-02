@@ -106,7 +106,7 @@ const EventDetail = () => {
           attendee_phone: validatedData.phone || null,
           num_tickets: validatedData.numTickets,
           total_amount: event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets,
-          payment_status: event?.is_free ? "free" : "pending",
+          payment_status: event?.is_free ? "paid" : "pending",
           registration_status: event?.is_free ? "confirmed" : "pending",
         })
         .select("id")
