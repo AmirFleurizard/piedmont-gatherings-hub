@@ -58,7 +58,7 @@ const churches: Church[] = [
   },
   {
     name: "First Christian Church - Reidsville",
-    pastor: "Dr. Jacqueline MeHenry",
+    pastor: "Rev. Dr. Jackie McHenry",
     address: "206 Holderby Street, P.O. Box 1025",
     city: "Reidsville, NC 27320",
     phone: "(336) 349-3910",
