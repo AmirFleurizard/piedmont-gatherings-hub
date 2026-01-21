@@ -12,6 +12,7 @@ import Events from "./pages/Events";
 import EventDetail from "./pages/EventDetail";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
+import AcceptInvite from "./pages/AcceptInvite";
 import Dashboard from "./pages/admin/Dashboard";
 import Overview from "./pages/admin/Overview";
 import EventsManagement from "./pages/admin/EventsManagement";
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/events/:eventId" element={<EventDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/accept-invite" element={<AcceptInvite />} />
             <Route path="/admin" element={<Dashboard />}>
               <Route index element={<Overview />} />
               <Route path="events" element={<EventsManagement />} />
