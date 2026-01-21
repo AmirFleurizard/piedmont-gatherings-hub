@@ -61,6 +61,7 @@ const Dashboard = () => {
 
   if (role === "county_admin") {
     navItems.splice(2, 0, { path: "/admin/churches", label: "Churches", icon: Church });
+    navItems.push({ path: "/admin/users", label: "Users", icon: Users });
   }
 
   const isActive = (path: string, exact?: boolean) => {
