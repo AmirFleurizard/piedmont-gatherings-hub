@@ -17,6 +17,7 @@ import Overview from "./pages/admin/Overview";
 import EventsManagement from "./pages/admin/EventsManagement";
 import ChurchesManagement from "./pages/admin/ChurchesManagement";
 import RegistrationsManagement from "./pages/admin/RegistrationsManagement";
+import UsersManagement from "./pages/admin/UsersManagement";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="events" element={<EventsManagement />} />
               <Route path="churches" element={<ChurchesManagement />} />
               <Route path="registrations" element={<RegistrationsManagement />} />
+              <Route path="users" element={<UsersManagement />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
