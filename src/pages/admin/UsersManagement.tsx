@@ -46,8 +46,6 @@ import {
   UserPlus,
   Trash2,
   Edit,
-  Mail,
-  RefreshCw,
   Clock,
   CheckCircle,
   XCircle,
@@ -92,12 +90,13 @@ const UsersManagement = () => {
   const [selectedRole, setSelectedRole] = useState<AppRole | "">("");
   const [selectedChurchId, setSelectedChurchId] = useState<string>("");
 
-  // Invite dialog state
-  const [inviteDialogOpen, setInviteDialogOpen] = useState(false);
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteFullName, setInviteFullName] = useState("");
-  const [inviteRole, setInviteRole] = useState<AppRole | "">("");
-  const [inviteChurchId, setInviteChurchId] = useState("");
+  // Create user dialog state
+  const [createUserDialogOpen, setCreateUserDialogOpen] = useState(false);
+  const [createEmail, setCreateEmail] = useState("");
+  const [createPassword, setCreatePassword] = useState("");
+  const [createFullName, setCreateFullName] = useState("");
+  const [createRole, setCreateRole] = useState<AppRole | "">("");
+  const [createChurchId, setCreateChurchId] = useState("");
   const [cancelInviteDialogOpen, setCancelInviteDialogOpen] = useState(false);
   const [selectedInvite, setSelectedInvite] = useState<PendingInvite | null>(null);
 
@@ -184,21 +183,23 @@ const UsersManagement = () => {
     enabled: role === "county_admin",
   });
 
-  // Send invite mutation
-  const sendInviteMutation = useMutation({
+  // Create user mutation
+  const createUserMutation = useMutation({
     mutationFn: async ({
       email,
+      password,
       full_name,
       role,
       church_id,
     }: {
       email: string;
+      password: string;
       full_name?: string;
       role: AppRole;
       church_id?: string;
     }) => {
-      const { data, error } = await supabase.functions.invoke("send-user-invite", {
-        body: { email, full_name, role, church_id },
+      const { data, error } = await supabase.functions.invoke("create-user", {
+        body: { email, password, full_name, role, church_id },
       });
 
       if (error) throw error;
@@ -207,14 +208,14 @@ const UsersManagement = () => {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pending-invites"] });
-      toast({ title: "Invitation sent successfully" });
-      setInviteDialogOpen(false);
-      resetInviteForm();
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast({ title: "User created successfully" });
+      setCreateUserDialogOpen(false);
+      resetCreateUserForm();
     },
     onError: (error) => {
       toast({
-        title: "Failed to send invitation",
+        title: "Failed to create user",
         description: error.message,
         variant: "destructive",
       });
@@ -318,11 +319,12 @@ const UsersManagement = () => {
     setSelectedChurchId("");
   };
 
-  const resetInviteForm = () => {
-    setInviteEmail("");
-    setInviteFullName("");
-    setInviteRole("");
-    setInviteChurchId("");
+  const resetCreateUserForm = () => {
+    setCreateEmail("");
+    setCreatePassword("");
+    setCreateFullName("");
+    setCreateRole("");
+    setCreateChurchId("");
   };
 
   const openRoleDialog = (user: UserWithRole) => {
@@ -362,17 +364,26 @@ const UsersManagement = () => {
     removeRoleMutation.mutate(selectedUser.role_id);
   };
 
-  const handleSendInvite = () => {
-    if (!inviteEmail || !inviteRole) {
+  const handleCreateUser = () => {
+    if (!createEmail || !createPassword || !createRole) {
       toast({
         title: "Missing information",
-        description: "Please enter an email and select a role.",
+        description: "Please enter email, password, and select a role.",
         variant: "destructive",
       });
       return;
     }
 
-    if (inviteRole === "church_admin" && !inviteChurchId) {
+    if (createPassword.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (createRole === "church_admin" && !createChurchId) {
       toast({
         title: "Church required",
         description: "Please select a church for the church admin role.",
@@ -381,11 +392,12 @@ const UsersManagement = () => {
       return;
     }
 
-    sendInviteMutation.mutate({
-      email: inviteEmail,
-      full_name: inviteFullName || undefined,
-      role: inviteRole,
-      church_id: inviteRole === "church_admin" ? inviteChurchId : undefined,
+    createUserMutation.mutate({
+      email: createEmail,
+      password: createPassword,
+      full_name: createFullName || undefined,
+      role: createRole,
+      church_id: createRole === "church_admin" ? createChurchId : undefined,
     });
   };
 
@@ -394,14 +406,6 @@ const UsersManagement = () => {
     setCancelInviteDialogOpen(true);
   };
 
-  const handleResendInvite = (invite: PendingInvite) => {
-    sendInviteMutation.mutate({
-      email: invite.email,
-      full_name: invite.full_name || undefined,
-      role: invite.role,
-      church_id: invite.church_id || undefined,
-    });
-  };
 
   const filteredUsers = users?.filter(
     (user) =>
@@ -479,9 +483,9 @@ const UsersManagement = () => {
               className="pl-10"
             />
           </div>
-          <Button onClick={() => setInviteDialogOpen(true)}>
-            <Mail className="h-4 w-4 mr-2" />
-            Invite User
+          <Button onClick={() => setCreateUserDialogOpen(true)}>
+            <UserPlus className="h-4 w-4 mr-2" />
+            Create User
           </Button>
         </div>
       </div>
@@ -601,15 +605,6 @@ const UsersManagement = () => {
                             {!invite.accepted_at && (
                               <>
                                 <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleResendInvite(invite)}
-                                  disabled={sendInviteMutation.isPending}
-                                >
-                                  <RefreshCw className="h-4 w-4" />
-                                  <span className="ml-1 hidden sm:inline">Resend</span>
-                                </Button>
-                                <Button
                                   variant="destructive"
                                   size="sm"
                                   onClick={() => openCancelInviteDialog(invite)}
@@ -630,42 +625,51 @@ const UsersManagement = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Invite User Dialog */}
-      <Dialog open={inviteDialogOpen} onOpenChange={setInviteDialogOpen}>
+      {/* Create User Dialog */}
+      <Dialog open={createUserDialogOpen} onOpenChange={setCreateUserDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Invite New User</DialogTitle>
+            <DialogTitle>Create New User</DialogTitle>
             <DialogDescription>
-              Send an invitation email to a new user. They will receive a link to create their
-              account.
+              Create a new user account with email and password. The user will be able to log in immediately.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="invite-email">Email *</Label>
+              <Label htmlFor="create-email">Email *</Label>
               <Input
-                id="invite-email"
+                id="create-email"
                 type="email"
                 placeholder="user@example.com"
-                value={inviteEmail}
-                onChange={(e) => setInviteEmail(e.target.value)}
+                value={createEmail}
+                onChange={(e) => setCreateEmail(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="invite-name">Full Name (optional)</Label>
+              <Label htmlFor="create-password">Password *</Label>
               <Input
-                id="invite-name"
+                id="create-password"
+                type="password"
+                placeholder="Minimum 6 characters"
+                value={createPassword}
+                onChange={(e) => setCreatePassword(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="create-name">Full Name (optional)</Label>
+              <Input
+                id="create-name"
                 type="text"
                 placeholder="John Smith"
-                value={inviteFullName}
-                onChange={(e) => setInviteFullName(e.target.value)}
+                value={createFullName}
+                onChange={(e) => setCreateFullName(e.target.value)}
               />
             </div>
             <div className="space-y-2">
               <Label>Role *</Label>
               <Select
-                value={inviteRole}
-                onValueChange={(value) => setInviteRole(value as AppRole)}
+                value={createRole}
+                onValueChange={(value) => setCreateRole(value as AppRole)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select a role" />
@@ -676,10 +680,10 @@ const UsersManagement = () => {
                 </SelectContent>
               </Select>
             </div>
-            {inviteRole === "church_admin" && (
+            {createRole === "church_admin" && (
               <div className="space-y-2">
                 <Label>Church *</Label>
-                <Select value={inviteChurchId} onValueChange={setInviteChurchId}>
+                <Select value={createChurchId} onValueChange={setCreateChurchId}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a church" />
                   </SelectTrigger>
@@ -695,11 +699,11 @@ const UsersManagement = () => {
             )}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setInviteDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setCreateUserDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSendInvite} disabled={sendInviteMutation.isPending}>
-              {sendInviteMutation.isPending ? "Sending..." : "Send Invitation"}
+            <Button onClick={handleCreateUser} disabled={createUserMutation.isPending}>
+              {createUserMutation.isPending ? "Creating..." : "Create User"}
             </Button>
           </DialogFooter>
         </DialogContent>
