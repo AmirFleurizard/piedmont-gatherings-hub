@@ -80,7 +80,9 @@ const Events = () => {
                           <span className="text-secondary font-medium">
                             {event.is_free ? "Free" : `$${event.price}`}
                           </span>
-                          <span className="text-muted-foreground">{event.spots_remaining} spots left</span>
+                          {!event.has_unlimited_capacity && (
+                            <span className="text-muted-foreground">{event.spots_remaining} spots left</span>
+                          )}
                         </div>
                       </CardContent>
                       <CardFooter>
