@@ -113,12 +113,22 @@ const EventsManagement = () => {
       const capacity = hasUnlimitedCapacity ? 999999 : (parseInt(formData.get("capacity") as string) || 100);
       const externalUrl = formData.get("external_registration_url") as string;
 
+      // Convert datetime-local values to ISO strings with timezone offset
+      // so the database stores the intended local time correctly
+      const toISOWithOffset = (dateStr: string): string => {
+        const date = new Date(dateStr);
+        return date.toISOString();
+      };
+
+      const rawEventDate = formData.get("event_date") as string;
+      const rawEndDate = formData.get("end_date") as string;
+
       const eventData = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         location: formData.get("location") as string,
-        event_date: formData.get("event_date") as string,
-        end_date: formData.get("end_date") as string || null,
+        event_date: toISOWithOffset(rawEventDate),
+        end_date: rawEndDate ? toISOWithOffset(rawEndDate) : null,
         capacity: capacity,
         spots_remaining: editingEvent 
           ? editingEvent.spots_remaining 
