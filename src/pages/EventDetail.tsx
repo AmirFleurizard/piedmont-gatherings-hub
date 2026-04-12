@@ -126,16 +126,20 @@ const EventDetail = () => {
         const totalPrice = event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets;
         const eventDate = format(new Date(event!.event_date), "EEEE, MMMM d, yyyy 'at' h:mm a");
         
-        const emailResponse = await supabase.functions.invoke("send-registration-confirmation", {
+        const emailResponse = await supabase.functions.invoke("send-transactional-email", {
           body: {
-            attendeeName: validatedData.name,
-            attendeeEmail: validatedData.email,
-            eventTitle: event!.title,
-            eventDate: eventDate,
-            eventLocation: event!.location,
-            numTickets: validatedData.numTickets,
-            totalPrice: totalPrice,
-            registrationId: registrationData.id,
+            templateName: "registration-confirmation",
+            recipientEmail: validatedData.email,
+            idempotencyKey: `reg-confirm-${registrationData.id}`,
+            templateData: {
+              attendeeName: validatedData.name,
+              eventTitle: event!.title,
+              eventDate: eventDate,
+              eventLocation: event!.location,
+              numTickets: validatedData.numTickets,
+              totalPrice: totalPrice,
+              registrationId: registrationData.id,
+            },
           },
         });
 
