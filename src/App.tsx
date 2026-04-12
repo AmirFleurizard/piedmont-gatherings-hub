@@ -19,6 +19,7 @@ import EventsManagement from "./pages/admin/EventsManagement";
 import ChurchesManagement from "./pages/admin/ChurchesManagement";
 import RegistrationsManagement from "./pages/admin/RegistrationsManagement";
 import UsersManagement from "./pages/admin/UsersManagement";
+import Unsubscribe from "./pages/Unsubscribe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/accept-invite" element={<AcceptInvite />} />
+            <Route path="/unsubscribe" element={<Unsubscribe />} />
             <Route path="/admin" element={<Dashboard />}>
               <Route index element={<Overview />} />
               <Route path="events" element={<EventsManagement />} />
