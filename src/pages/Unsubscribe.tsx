@@ -94,7 +94,7 @@ const Unsubscribe = () => {
     ),
     success: (
       <div className="flex flex-col items-center gap-4 py-8">
-        <CheckCircle className="h-10 w-10 text-green-600" />
+        <CheckCircle className="h-10 w-10 text-accent" />
         <p className="text-muted-foreground">You've been successfully unsubscribed.</p>
       </div>
     ),
