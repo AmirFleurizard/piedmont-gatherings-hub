@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
@@ -39,7 +39,28 @@ const registrationSchema = z.object({
 const EventDetail = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
+
+  // Handle return from Stripe Checkout
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (status === "success") {
+      toast({
+        title: "Payment successful!",
+        description: "Your registration is confirmed. A confirmation email is on its way.",
+      });
+      setSearchParams({}, { replace: true });
+    } else if (status === "cancelled") {
+      toast({
+        title: "Payment cancelled",
+        description: "Your reserved spot will be released shortly. You can try registering again.",
+        variant: "destructive",
+      });
+      setSearchParams({}, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [isRegistering, setIsRegistering] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
