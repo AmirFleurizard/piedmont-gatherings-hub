@@ -9,7 +9,8 @@ Deno.serve(async (req) => {
 
   const signature = req.headers.get("stripe-signature");
   const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
-  const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+  const stripeKey =
+    Deno.env.get("STRIPE_SECRET_KEY_TEST") || Deno.env.get("STRIPE_SECRET_KEY");
 
   if (!signature || !webhookSecret || !stripeKey) {
     return new Response("Missing webhook configuration", { status: 500 });
