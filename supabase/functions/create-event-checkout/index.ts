@@ -62,7 +62,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, {
+    // Prefer test key when present so we can test without touching the live key
+    const stripeKey =
+      Deno.env.get("STRIPE_SECRET_KEY_TEST") || Deno.env.get("STRIPE_SECRET_KEY")!;
+    const stripe = new Stripe(stripeKey, {
       apiVersion: "2024-11-20.acacia",
     });
 
