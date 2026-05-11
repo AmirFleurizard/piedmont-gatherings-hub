@@ -455,7 +455,7 @@ const EventDetail = () => {
 
                       {!event.is_free && (
                         <p className="text-xs text-muted-foreground text-center">
-                          Payment processing will be available soon.
+                          You'll be redirected to Stripe to complete payment. Your spot is held for 15 minutes.
                         </p>
                       )}
                     </form>
