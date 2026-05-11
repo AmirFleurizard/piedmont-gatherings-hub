@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
@@ -39,7 +39,28 @@ const registrationSchema = z.object({
 const EventDetail = () => {
   const { eventId } = useParams();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { toast } = useToast();
+
+  // Handle return from Stripe Checkout
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (status === "success") {
+      toast({
+        title: "Payment successful!",
+        description: "Your registration is confirmed. A confirmation email is on its way.",
+      });
+      setSearchParams({}, { replace: true });
+    } else if (status === "cancelled") {
+      toast({
+        title: "Payment cancelled",
+        description: "Your reserved spot will be released shortly. You can try registering again.",
+        variant: "destructive",
+      });
+      setSearchParams({}, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [isRegistering, setIsRegistering] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState({
@@ -97,6 +118,11 @@ const EventDetail = () => {
       }
 
       // Create the registration with validated data
+      const isFree = !!event?.is_free;
+      const holdExpiresAt = isFree
+        ? null
+        : new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
       const { data: registrationData, error: insertError } = await supabase
         .from("registrations")
         .insert({
@@ -105,15 +131,15 @@ const EventDetail = () => {
           attendee_email: validatedData.email,
           attendee_phone: validatedData.phone || null,
           num_tickets: validatedData.numTickets,
-          total_amount: event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets,
-          payment_status: event?.is_free ? "paid" : "pending",
-          registration_status: event?.is_free ? "confirmed" : "pending",
+          total_amount: isFree ? 0 : (event?.price || 0) * validatedData.numTickets,
+          payment_status: isFree ? "paid" : "pending",
+          registration_status: isFree ? "confirmed" : "pending",
+          hold_expires_at: holdExpiresAt,
         })
         .select("id")
         .single();
 
       if (insertError) {
-        // Release the spots if registration failed
         await supabase.rpc("release_event_spots", {
           _event_id: eventId!,
           _num_tickets: validatedData.numTickets,
@@ -121,11 +147,38 @@ const EventDetail = () => {
         throw insertError;
       }
 
-      // Send confirmation email (don't fail registration if email fails)
+      // Paid event → create Stripe Checkout Session and redirect
+      if (!isFree) {
+        const { data: checkoutData, error: checkoutError } =
+          await supabase.functions.invoke("create-event-checkout", {
+            body: {
+              registrationId: registrationData.id,
+              origin: window.location.origin,
+            },
+          });
+
+        if (checkoutError || !checkoutData?.url) {
+          await supabase.rpc("release_event_spots", {
+            _event_id: eventId!,
+            _num_tickets: validatedData.numTickets,
+          });
+          await supabase
+            .from("registrations")
+            .update({ payment_status: "cancelled", registration_status: "cancelled" })
+            .eq("id", registrationData.id);
+          throw new Error(
+            checkoutError?.message || "Could not start checkout. Please try again."
+          );
+        }
+
+        window.location.href = checkoutData.url as string;
+        return registrationData;
+      }
+
+      // Free event → send confirmation email
       try {
-        const totalPrice = event?.is_free ? 0 : (event?.price || 0) * validatedData.numTickets;
         const eventDate = format(new Date(event!.event_date), "EEEE, MMMM d, yyyy 'at' h:mm a");
-        
+
         const emailResponse = await supabase.functions.invoke("send-transactional-email", {
           body: {
             templateName: "registration-confirmation",
@@ -137,7 +190,7 @@ const EventDetail = () => {
               eventDate: eventDate,
               eventLocation: event!.location,
               numTickets: validatedData.numTickets,
-              totalPrice: totalPrice,
+              totalPrice: 0,
               registrationId: registrationData.id,
             },
           },
@@ -146,7 +199,6 @@ const EventDetail = () => {
         if (emailResponse.error) {
           console.error("Failed to send confirmation email:", emailResponse.error);
         } else {
-          // Update confirmation_sent flag
           await supabase
             .from("registrations")
             .update({ confirmation_sent: true })
@@ -159,13 +211,14 @@ const EventDetail = () => {
       return registrationData;
     },
     onSuccess: () => {
-      toast({
-        title: "Registration successful!",
-        description: event?.is_free
-          ? "You're all set! A confirmation email has been sent to your inbox."
-          : "Your registration is pending. Payment processing will be available soon.",
-      });
-      navigate("/events");
+      if (event?.is_free) {
+        toast({
+          title: "Registration successful!",
+          description: "You're all set! A confirmation email has been sent to your inbox.",
+        });
+        navigate("/events");
+      }
+      // Paid path redirects to Stripe directly; no toast needed.
     },
     onError: (error: Error) => {
       toast({
@@ -402,7 +455,7 @@ const EventDetail = () => {
 
                       {!event.is_free && (
                         <p className="text-xs text-muted-foreground text-center">
-                          Payment processing will be available soon.
+                          You'll be redirected to Stripe to complete payment. Your spot is held for 15 minutes.
                         </p>
                       )}
                     </form>
