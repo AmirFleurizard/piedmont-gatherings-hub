@@ -14,6 +14,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
+import {
+  REGISTRATION_FIELDS,
+  getFieldConfig,
+  type RegistrationFieldKey,
+  type RegistrationFieldsConfig,
+} from "@/lib/registration-fields";
 
 type Event = Tables<"events">;
 
