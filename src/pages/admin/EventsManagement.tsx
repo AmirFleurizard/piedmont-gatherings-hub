@@ -245,6 +245,11 @@ const EventsManagement = () => {
     setHasUnlimitedCapacity(event.has_unlimited_capacity);
     setIsFree(event.is_free);
     setIsPublished(event.is_published);
+    const cfg: RegistrationFieldsConfig = {};
+    REGISTRATION_FIELDS.forEach((f) => {
+      cfg[f.key] = getFieldConfig((event as any).registration_fields, f.key);
+    });
+    setRegistrationFields(cfg);
     setIsDialogOpen(true);
   };
 
@@ -255,6 +260,7 @@ const EventsManagement = () => {
     setHasUnlimitedCapacity(false);
     setIsFree(true);
     setIsPublished(false);
+    setRegistrationFields({});
     setIsDialogOpen(true);
   };
 
