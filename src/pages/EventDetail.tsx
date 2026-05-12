@@ -75,6 +75,7 @@ const EventDetail = () => {
     phone: "",
     numTickets: 1,
   });
+  const [extraData, setExtraData] = useState<Record<string, string>>({});
 
   const { data: event, isLoading } = useQuery({
     queryKey: ["event", eventId],
