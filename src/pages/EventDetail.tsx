@@ -92,6 +92,12 @@ const EventDetail = () => {
     enabled: !!eventId,
   });
 
+  // Fields enabled for this event by the admin
+  const enabledFields = REGISTRATION_FIELDS.map((f) => ({
+    def: f,
+    cfg: getFieldConfig((event as any)?.registration_fields, f.key),
+  })).filter((f) => f.cfg.enabled);
+
   const registerMutation = useMutation({
     mutationFn: async () => {
       // Validate form data with zod schema
@@ -109,6 +115,19 @@ const EventDetail = () => {
       }
 
       const validatedData = validationResult.data;
+
+      // Validate dynamic additional fields
+      const additionalInfo: Record<string, string> = {};
+      for (const { def, cfg } of enabledFields) {
+        const raw = (extraData[def.key] || "").trim();
+        if (cfg.required && !raw) {
+          throw new Error(`${def.label} is required`);
+        }
+        if (def.maxLength && raw.length > def.maxLength) {
+          throw new Error(`${def.label} must be less than ${def.maxLength} characters`);
+        }
+        if (raw) additionalInfo[def.key] = raw;
+      }
 
       // First reserve the spots
       const { data: reserved, error: reserveError } = await supabase.rpc(
@@ -142,6 +161,7 @@ const EventDetail = () => {
           payment_status: isFree ? "paid" : "pending",
           registration_status: isFree ? "confirmed" : "pending",
           hold_expires_at: holdExpiresAt,
+          additional_info: additionalInfo as any,
         })
         .select("id")
         .single();
