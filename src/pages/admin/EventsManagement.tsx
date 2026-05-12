@@ -36,6 +36,22 @@ const EventsManagement = () => {
   const [hasUnlimitedCapacity, setHasUnlimitedCapacity] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [isPublished, setIsPublished] = useState(false);
+  const [registrationFields, setRegistrationFields] =
+    useState<RegistrationFieldsConfig>({});
+
+  const setFieldEnabled = (key: RegistrationFieldKey, enabled: boolean) => {
+    setRegistrationFields((prev) => ({
+      ...prev,
+      [key]: { enabled, required: enabled ? prev[key]?.required ?? false : false },
+    }));
+  };
+
+  const setFieldRequired = (key: RegistrationFieldKey, required: boolean) => {
+    setRegistrationFields((prev) => ({
+      ...prev,
+      [key]: { enabled: prev[key]?.enabled ?? false, required },
+    }));
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
