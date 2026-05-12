@@ -13,6 +13,12 @@ import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Loader2, ExternalLink }
 import { format } from "date-fns";
 import worshipImage from "@/assets/worship.jpg";
 import { z } from "zod";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  REGISTRATION_FIELDS,
+  getFieldConfig,
+  type RegistrationFieldKey,
+} from "@/lib/registration-fields";
 
 // Zod schema for registration validation
 const registrationSchema = z.object({
