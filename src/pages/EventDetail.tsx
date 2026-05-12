@@ -13,6 +13,11 @@ import { Calendar, MapPin, Users, DollarSign, ArrowLeft, Loader2, ExternalLink }
 import { format } from "date-fns";
 import worshipImage from "@/assets/worship.jpg";
 import { z } from "zod";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  REGISTRATION_FIELDS,
+  getFieldConfig,
+} from "@/lib/registration-fields";
 
 // Zod schema for registration validation
 const registrationSchema = z.object({
@@ -69,6 +74,7 @@ const EventDetail = () => {
     phone: "",
     numTickets: 1,
   });
+  const [extraData, setExtraData] = useState<Record<string, string>>({});
 
   const { data: event, isLoading } = useQuery({
     queryKey: ["event", eventId],
@@ -84,6 +90,12 @@ const EventDetail = () => {
     },
     enabled: !!eventId,
   });
+
+  // Fields enabled for this event by the admin
+  const enabledFields = REGISTRATION_FIELDS.map((f) => ({
+    def: f,
+    cfg: getFieldConfig((event as any)?.registration_fields, f.key),
+  })).filter((f) => f.cfg.enabled);
 
   const registerMutation = useMutation({
     mutationFn: async () => {
@@ -102,6 +114,19 @@ const EventDetail = () => {
       }
 
       const validatedData = validationResult.data;
+
+      // Validate dynamic additional fields
+      const additionalInfo: Record<string, string> = {};
+      for (const { def, cfg } of enabledFields) {
+        const raw = (extraData[def.key] || "").trim();
+        if (cfg.required && !raw) {
+          throw new Error(`${def.label} is required`);
+        }
+        if (def.maxLength && raw.length > def.maxLength) {
+          throw new Error(`${def.label} must be less than ${def.maxLength} characters`);
+        }
+        if (raw) additionalInfo[def.key] = raw;
+      }
 
       // First reserve the spots
       const { data: reserved, error: reserveError } = await supabase.rpc(
@@ -135,6 +160,7 @@ const EventDetail = () => {
           payment_status: isFree ? "paid" : "pending",
           registration_status: isFree ? "confirmed" : "pending",
           hold_expires_at: holdExpiresAt,
+          additional_info: additionalInfo as any,
         })
         .select("id")
         .single();
@@ -405,6 +431,44 @@ const EventDetail = () => {
                           }
                         />
                       </div>
+
+                      {enabledFields.map(({ def, cfg }) => (
+                        <div key={def.key} className="space-y-2">
+                          <Label htmlFor={`extra-${def.key}`}>
+                            {def.label}{" "}
+                            {cfg.required ? (
+                              "*"
+                            ) : (
+                              <span className="text-muted-foreground font-normal">(optional)</span>
+                            )}
+                          </Label>
+                          {def.inputType === "textarea" ? (
+                            <Textarea
+                              id={`extra-${def.key}`}
+                              rows={2}
+                              maxLength={def.maxLength}
+                              value={extraData[def.key] || ""}
+                              onChange={(e) =>
+                                setExtraData({ ...extraData, [def.key]: e.target.value })
+                              }
+                              required={cfg.required}
+                            />
+                          ) : (
+                            <Input
+                              id={`extra-${def.key}`}
+                              maxLength={def.maxLength}
+                              value={extraData[def.key] || ""}
+                              onChange={(e) =>
+                                setExtraData({ ...extraData, [def.key]: e.target.value })
+                              }
+                              required={cfg.required}
+                            />
+                          )}
+                          {def.helper && (
+                            <p className="text-xs text-muted-foreground">{def.helper}</p>
+                          )}
+                        </div>
+                      ))}
 
                       {!event.has_unlimited_capacity && (
                         <div className="space-y-2">

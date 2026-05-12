@@ -14,6 +14,12 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, Edit, Trash2, Eye, EyeOff, Upload, X } from "lucide-react";
 import { format } from "date-fns";
 import type { Tables } from "@/integrations/supabase/types";
+import {
+  REGISTRATION_FIELDS,
+  getFieldConfig,
+  type RegistrationFieldKey,
+  type RegistrationFieldsConfig,
+} from "@/lib/registration-fields";
 
 type Event = Tables<"events">;
 
@@ -30,6 +36,22 @@ const EventsManagement = () => {
   const [hasUnlimitedCapacity, setHasUnlimitedCapacity] = useState(false);
   const [isFree, setIsFree] = useState(true);
   const [isPublished, setIsPublished] = useState(false);
+  const [registrationFields, setRegistrationFields] =
+    useState<RegistrationFieldsConfig>({});
+
+  const setFieldEnabled = (key: RegistrationFieldKey, enabled: boolean) => {
+    setRegistrationFields((prev) => ({
+      ...prev,
+      [key]: { enabled, required: enabled ? prev[key]?.required ?? false : false },
+    }));
+  };
+
+  const setFieldRequired = (key: RegistrationFieldKey, required: boolean) => {
+    setRegistrationFields((prev) => ({
+      ...prev,
+      [key]: { enabled: prev[key]?.enabled ?? false, required },
+    }));
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -140,6 +162,7 @@ const EventsManagement = () => {
         church_id: formData.get("church_id") as string,
         image_url: imageUrl,
         external_registration_url: externalUrl || null,
+        registration_fields: registrationFields as any,
       };
 
       if (editingEvent) {
@@ -222,6 +245,11 @@ const EventsManagement = () => {
     setHasUnlimitedCapacity(event.has_unlimited_capacity);
     setIsFree(event.is_free);
     setIsPublished(event.is_published);
+    const cfg: RegistrationFieldsConfig = {};
+    REGISTRATION_FIELDS.forEach((f) => {
+      cfg[f.key] = getFieldConfig((event as any).registration_fields, f.key);
+    });
+    setRegistrationFields(cfg);
     setIsDialogOpen(true);
   };
 
@@ -232,6 +260,7 @@ const EventsManagement = () => {
     setHasUnlimitedCapacity(false);
     setIsFree(true);
     setIsPublished(false);
+    setRegistrationFields({});
     setIsDialogOpen(true);
   };
 
@@ -461,6 +490,51 @@ const EventsManagement = () => {
                   />
                 </div>
               )}
+
+              <div className="space-y-3 rounded-md border p-4">
+                <div>
+                  <Label className="text-base">Additional Registration Fields</Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Toggle which fields appear on the registration form, and whether each is required.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  {REGISTRATION_FIELDS.map((f) => {
+                    const cfg = registrationFields[f.key] ?? { enabled: false, required: false };
+                    return (
+                      <div
+                        key={f.key}
+                        className="flex flex-wrap items-center justify-between gap-3 rounded-md border bg-background px-3 py-2"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Switch
+                            id={`field-${f.key}`}
+                            checked={cfg.enabled}
+                            onCheckedChange={(v) => setFieldEnabled(f.key, v)}
+                          />
+                          <Label htmlFor={`field-${f.key}`} className="cursor-pointer">
+                            {f.label}
+                          </Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            id={`field-${f.key}-required`}
+                            checked={cfg.required}
+                            disabled={!cfg.enabled}
+                            onCheckedChange={(v) => setFieldRequired(f.key, v)}
+                          />
+                          <Label
+                            htmlFor={`field-${f.key}-required`}
+                            className={cfg.enabled ? "cursor-pointer" : "opacity-50"}
+                          >
+                            Required
+                          </Label>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
 
               <div className="flex justify-end gap-2">
                 <Button

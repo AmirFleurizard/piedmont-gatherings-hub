@@ -153,6 +153,7 @@ export type Database = {
           is_published: boolean
           location: string
           price: number | null
+          registration_fields: Json
           spots_remaining: number
           title: string
           updated_at: string
@@ -172,6 +173,7 @@ export type Database = {
           is_published?: boolean
           location: string
           price?: number | null
+          registration_fields?: Json
           spots_remaining?: number
           title: string
           updated_at?: string
@@ -191,6 +193,7 @@ export type Database = {
           is_published?: boolean
           location?: string
           price?: number | null
+          registration_fields?: Json
           spots_remaining?: number
           title?: string
           updated_at?: string
@@ -278,6 +281,7 @@ export type Database = {
       }
       registrations: {
         Row: {
+          additional_info: Json
           attendee_email: string
           attendee_name: string
           attendee_phone: string | null
@@ -297,6 +301,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          additional_info?: Json
           attendee_email: string
           attendee_name: string
           attendee_phone?: string | null
@@ -316,6 +321,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          additional_info?: Json
           attendee_email?: string
           attendee_name?: string
           attendee_phone?: string | null
