@@ -491,6 +491,51 @@ const EventsManagement = () => {
                 </div>
               )}
 
+              <div className="space-y-3 rounded-md border p-4">
+                <div>
+                  <Label className="text-base">Additional Registration Fields</Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Toggle which fields appear on the registration form, and whether each is required.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  {REGISTRATION_FIELDS.map((f) => {
+                    const cfg = registrationFields[f.key] ?? { enabled: false, required: false };
+                    return (
+                      <div
+                        key={f.key}
+                        className="flex flex-wrap items-center justify-between gap-3 rounded-md border bg-background px-3 py-2"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Switch
+                            id={`field-${f.key}`}
+                            checked={cfg.enabled}
+                            onCheckedChange={(v) => setFieldEnabled(f.key, v)}
+                          />
+                          <Label htmlFor={`field-${f.key}`} className="cursor-pointer">
+                            {f.label}
+                          </Label>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Switch
+                            id={`field-${f.key}-required`}
+                            checked={cfg.required}
+                            disabled={!cfg.enabled}
+                            onCheckedChange={(v) => setFieldRequired(f.key, v)}
+                          />
+                          <Label
+                            htmlFor={`field-${f.key}-required`}
+                            className={cfg.enabled ? "cursor-pointer" : "opacity-50"}
+                          >
+                            Required
+                          </Label>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="flex justify-end gap-2">
                 <Button
                   type="button"
