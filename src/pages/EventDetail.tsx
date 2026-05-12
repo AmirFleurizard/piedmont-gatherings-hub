@@ -433,6 +433,44 @@ const EventDetail = () => {
                         />
                       </div>
 
+                      {enabledFields.map(({ def, cfg }) => (
+                        <div key={def.key} className="space-y-2">
+                          <Label htmlFor={`extra-${def.key}`}>
+                            {def.label}{" "}
+                            {cfg.required ? (
+                              "*"
+                            ) : (
+                              <span className="text-muted-foreground font-normal">(optional)</span>
+                            )}
+                          </Label>
+                          {def.inputType === "textarea" ? (
+                            <Textarea
+                              id={`extra-${def.key}`}
+                              rows={2}
+                              maxLength={def.maxLength}
+                              value={extraData[def.key] || ""}
+                              onChange={(e) =>
+                                setExtraData({ ...extraData, [def.key]: e.target.value })
+                              }
+                              required={cfg.required}
+                            />
+                          ) : (
+                            <Input
+                              id={`extra-${def.key}`}
+                              maxLength={def.maxLength}
+                              value={extraData[def.key] || ""}
+                              onChange={(e) =>
+                                setExtraData({ ...extraData, [def.key]: e.target.value })
+                              }
+                              required={cfg.required}
+                            />
+                          )}
+                          {def.helper && (
+                            <p className="text-xs text-muted-foreground">{def.helper}</p>
+                          )}
+                        </div>
+                      ))}
+
                       {!event.has_unlimited_capacity && (
                         <div className="space-y-2">
                           <Label htmlFor="numTickets">Number of Tickets</Label>
