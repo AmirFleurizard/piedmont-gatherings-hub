@@ -8,11 +8,8 @@ Deno.serve(async (req) => {
   }
 
   const signature = req.headers.get("stripe-signature");
-  const testKey = Deno.env.get("STRIPE_SECRET_KEY_TEST");
-  const stripeKey = testKey || Deno.env.get("STRIPE_SECRET_KEY");
-  const webhookSecret = testKey
-    ? (Deno.env.get("STRIPE_WEBHOOK_SECRET_TEST") || Deno.env.get("STRIPE_WEBHOOK_SECRET"))
-    : Deno.env.get("STRIPE_WEBHOOK_SECRET");
+  const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
 
   if (!signature || !webhookSecret || !stripeKey) {
     return new Response("Missing webhook configuration", { status: 500 });
