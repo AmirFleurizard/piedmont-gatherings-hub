@@ -17,7 +17,6 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   REGISTRATION_FIELDS,
   getFieldConfig,
-  type RegistrationFieldKey,
 } from "@/lib/registration-fields";
 
 // Zod schema for registration validation
