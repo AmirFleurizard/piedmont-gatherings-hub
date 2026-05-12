@@ -162,6 +162,7 @@ const EventsManagement = () => {
         church_id: formData.get("church_id") as string,
         image_url: imageUrl,
         external_registration_url: externalUrl || null,
+        registration_fields: registrationFields as any,
       };
 
       if (editingEvent) {
