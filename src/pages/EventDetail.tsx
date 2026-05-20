@@ -148,9 +148,13 @@ const EventDetail = () => {
         ? null
         : new Date(Date.now() + 15 * 60 * 1000).toISOString();
 
-      const { data: registrationData, error: insertError } = await supabase
+      // Generate id client-side so we don't need RETURNING (anon has no SELECT policy on registrations)
+      const newRegistrationId = (crypto as any).randomUUID();
+
+      const { error: insertError } = await supabase
         .from("registrations")
         .insert({
+          id: newRegistrationId,
           event_id: eventId!,
           attendee_name: validatedData.name,
           attendee_email: validatedData.email,
@@ -161,9 +165,7 @@ const EventDetail = () => {
           registration_status: isFree ? "confirmed" : "pending",
           hold_expires_at: holdExpiresAt,
           additional_info: additionalInfo as any,
-        })
-        .select("id")
-        .single();
+        });
 
       if (insertError) {
         await supabase.rpc("release_event_spots", {
@@ -172,6 +174,8 @@ const EventDetail = () => {
         });
         throw insertError;
       }
+
+      const registrationData = { id: newRegistrationId };
 
       // Paid event → create Stripe Checkout Session and redirect
       if (!isFree) {
